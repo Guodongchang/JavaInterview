@@ -102,7 +102,7 @@ public class CustomExceptionHandler implements HandlerExceptionResolver {
 <mvc:annotation-driven/>
 ```
 
-![1568904942613](Error.assets/1568904942613.png)
+![1568904942613](../media/pictures/Error.assets/1568904942613.png)
 
 
 
@@ -116,7 +116,7 @@ public class CustomExceptionHandler implements HandlerExceptionResolver {
 
 注意查看target目录下,如果WEB-INF目录下啥都没有,那肯定访问不到! 
 
-![1568799667069](Error.assets/1568799667069.png)
+![1568799667069](../media/pictures/Error.assets/1568799667069.png)
 
 **还有一个坑**!如果这个项目时web就是如果修改了module的名字,可能idea没有修改tomcat里面配置中Artifacts中的名字,要记得将原来的删除了,再重新添加一个新的artifacts!
 
@@ -235,7 +235,7 @@ List<Category> categoryList = new ArrayList<>();
 
 
 
-![1570693970305](Error.assets/1570693970305.png)
+![1570693970305](../media/pictures/Error.assets/1570693970305.png)
 
 
 
@@ -252,7 +252,7 @@ Retype new UNIX password:                                 //确认输入密码
 
 passwd: password updated successfully
 
-![img](Error.assets/20181202013157224.png)
+![img](../media/pictures/Error.assets/20181202013157224.png)
 
 我这里直接用root用户省去权限的麻烦
 
@@ -268,9 +268,10 @@ su
 
 ```
 vim /etc/ssh/sshd_config     
+
 ```
 
-![img](Error.assets/20181202013542419.png)
+![img](../media/pictures/Error.assets/20181202013542419.png)
 
 1.注释掉 “PermitRootLogin without-password”，修改两个地方：（或者是我图中标注的一样）
 
@@ -286,13 +287,13 @@ service ssh restart
 
 操作完成后就可以通过 root 账号登入 winscp 了。
 
-![img](Error.assets/2018120201372464.png)
+![img](../media/pictures/Error.assets/2018120201372464.png)
 
 记住是root用户登陆
 
 ### 16.ZkNoNodeException
 
-![1570870495467](Error.assets/1570870495467.png)
+![1570870495467](../media/pictures/Error.assets/1570870495467.png)
 
 如果出现上述这个问题,需要导包.
 
@@ -305,6 +306,7 @@ service ssh restart
     <artifactId>zkclient</artifactId>
     <version>0.1</version>
 </dependency>
+
 ```
 
 加了这个依赖以后,就不会报错啦!
@@ -325,7 +327,7 @@ service ssh restart
 
 然后建造出来的工程中看上去是父子工程!
 
-![1570873326704](Error.assets/1570873326704.png)
+![1570873326704](../media/pictures/Error.assets/1570873326704.png)
 
 两个module放在了项目下面,其实,最外面的pom,xml中是没有这句话的!
 
@@ -334,6 +336,7 @@ service ssh restart
     <module>provider</module>
     <module>consumer</module>
 </modules>
+
 ```
 
 要想让子module使用父module中的依赖,必须要有这句话!
@@ -342,7 +345,42 @@ service ssh restart
 
 
 
-## .Litemall错误总结:
+### 19.项目总结
+
+1.写dao层时, 不要select * 这样性能会很低,要什么属性,查什么属性!
+
+```java
+select id from user where account = ? 
+
+```
+
+这样返回的对象中,只有这一个属性里面是有值!其他属性里面没有值!
+
+2.以后凡是写删除操作,都做个验证!虽然说删除最好写,但是也是最容易出问题的一个地方!避免删除admin项目展示出错!
+
+3.删除用户有讲究!在后端删除用户的时候,还要考虑和这个用户相关的订单,库存相关的东西,都要删除的,不然由于外键的作用,好多订单会找不到这个用户的!都会出现空指针!
+
+其实删除用户是最讲究的!要删的合适,要删的完整!
+
+还有,删除订单的时候还要修改对应的库存!
+
+4.过滤器需要将login放行!设置过滤器的作用就是,不能直接访问后端的接口!例如在浏览器中,直接访问后端某一个接口,那当然不合适!所以要加过滤器!不然的话,不安全!
+
+5.减库存,加事务  ThreadLocal
+
+6.减库存事务那个地方,前端传回来的数据num是对象,需要toString才可以比较,而库存stockNum,是double,比较时,类型扎转换时,要注意!
+
+同时不要为了这里一时的使用,修改bean对象里面的数据类型,因为这个bean对象,在其他好多地方还做了使用!一但修改,要改的地方还有很多!
+
+7.debug完了以后,必须要放行!不然下次还会继续接着debug!
+
+8.unreachable statement 意思是执行不到这句话!
+
+出问题的地方是connection提交的地方,一定要在return之前执行connection.commit();
+
+
+
+## Litemall错误总结:
 
 第一阶段:用户模块,影院模块,影片模块!
 
@@ -368,7 +406,7 @@ service ssh restart
 
 ### 8.关于mapper层加@param注解
 
-![1571235889081](Error.assets/1571235889081.png)
+![1571235889081](../media/pictures/Error.assets/1571235889081.png)
 
 如果参数是多个的时候,一定要加上,如果是一个的话,加不加都行!
 
@@ -387,6 +425,7 @@ public interface YLOrderMapper  {
 
     String getCinemaName(@Param("uuid") int cinema_id);
 }
+
 ```
 
 ### **9.写mapper对应的xml文件的时候,里面的SQL语句,提前在Navicat里面运行,Navicat有提示1功能,不会出错!**
@@ -397,7 +436,7 @@ public interface YLOrderMapper  {
 
 ### **11.在postman中测试,根据token获取username**
 
-![1571238518052](Error.assets/1571238518052.png)
+![1571238518052](../media/pictures/Error.assets/1571238518052.png)
 
 这个挺重要的!
 
@@ -411,12 +450,13 @@ public interface YLOrderMapper  {
 
 将数据库中数据查出来,业务需求是放到一个新的list中,返回到前端:
 
-![1571278561577](Error.assets/1571278561577.png)
+![1571278561577](../media/pictures/Error.assets/1571278561577.png)
 
 每次遍历一遍,将新的对象,放到list中!
 
 ```java
 SteveOrderVo steveOrderVo = new SteveOrderVo();
+
 ```
 
 **这一条语句,千万不能放到foreach外面,**如果放到foreach外面的话,其实相当于在内存中new了一块内存空间!
@@ -436,6 +476,7 @@ SteveOrderVo steveOrderVo = new SteveOrderVo();
             <artifactId>zkclient</artifactId>
             <version>0.10</version>
         </dependency>
+
 ```
 
 yml中的配置:
@@ -450,19 +491,20 @@ spring:
       port: 20886
     server: true
     registry: zookeeper://localhost:2181
+
 ```
 
 最重要的是这个:一定要加,不加的话,就没有注册进dubbo,一直不能用用!
 
-![1571405769209](Error.assets/1571405769209.png)
+![1571405769209](../media/pictures/Error.assets/1571405769209.png)
 
 ### **15.微服务项目,没有暴露接口报错:**
 
-![1571403196921](Error.assets/1571403196921.png)
+![1571403196921](../media/pictures/Error.assets/1571403196921.png)
 
 显示找不到service接口
 
-![1571403235170](Error.assets/1571403235170.png)
+![1571403235170](../media/pictures/Error.assets/1571403235170.png)
 
 service的接口需要这么写!这里不用@Autowired
 
@@ -502,6 +544,7 @@ public enum StockLogStatus {
         this.status = status;
     }
 }
+
 ```
 
 枚举类上面部分分号;之前的部分是和构造函数有关的!
@@ -512,13 +555,14 @@ public enum StockLogStatus {
 
 ```java
 StockLogStatus.SUCCESS.getIndex()
+
 ```
 
 17.mybatis-plus总结:
 
 数据库中的表如果有主键,根据数据库中生成bean,参数上面,可能没有主键的注解!
 
-![1571748428379](Error.assets/1571748428379.png)
+![1571748428379](../media/pictures/Error.assets/1571748428379.png)
 
 没有的话,要自己加上,才可以用的!
 
@@ -528,6 +572,7 @@ StockLogStatus.SUCCESS.getIndex()
 */
 @TableId(value = "uuid",type = IdType.INPUT)
 private String uuid;
+
 ```
 
 17.mybatis自动生成的sql语句,会出错的,要看清!
@@ -540,7 +585,7 @@ private String uuid;
 
 结果如下: 
 
-![1571824985880](Error.assets/1571824985880.png)
+![1571824985880](../media/pictures/Error.assets/1571824985880.png)
 
 然后启动start mqbroker.cmd -n 127.0.0.1:9876 autoCreateTopicEnable=true
 
@@ -548,7 +593,7 @@ private String uuid;
 
 问鑫哥,大佬说要删除磁盘下的一个文件
 
-![1571825068057](Error.assets/1571825068057.png)
+![1571825068057](../media/pictures/Error.assets/1571825068057.png)
 
 就是将整个文件夹删除掉!
 
@@ -556,7 +601,7 @@ private String uuid;
 
 删了以后,正确结果是:
 
-![1571825140964](Error.assets/1571825140964.png)
+![1571825140964](../media/pictures/Error.assets/1571825140964.png)
 
 这样的才是正确的!
 
@@ -570,11 +615,11 @@ private String uuid;
 
 ### 2.阿里云oss,这里有大写字母
 
-![image-20191203155003507](Error.assets/image-20191203155003507.png)
+![image-20191203155003507](../media/pictures/Error.assets/image-20191203155003507.png)
 
 会报错:
 
-![image-20191203155045971](Error.assets/image-20191203155045971.png)
+![image-20191203155045971](../media/pictures/Error.assets/image-20191203155045971.png)
 
 将大写的O 修改成小写的 就ok
 
@@ -584,7 +629,7 @@ private String uuid;
 
 ### 4.配置文件没有读取到:
 
-![image-20191204134550125](Error.assets/image-20191204134550125.png)
+![image-20191204134550125](../media/pictures/Error.assets/image-20191204134550125.png)
 
 有些地方是需要classpath的,这里不用.   什么时候用,什么时候不用?
 
@@ -598,7 +643,7 @@ private String uuid;
 
 注意：这种方式使用平台默认字符集
 
-[![复制代码](Error.assets/copycode.gif)](javascript:void(0);)
+[![复制代码](../media/pictures/Error.assets/copycode.gif)](javascript:void(0);)
 
 ```
 package com.bill.example;
@@ -622,7 +667,7 @@ public class StringByteArrayExamples
 }
 ```
 
-[![复制代码](Error.assets/copycode-1576217865908.gif)](javascript:void(0);)
+[![复制代码](../media/pictures/Error.assets/copycode-1576217865908.gif)](javascript:void(0);)
 
 输出：
 
@@ -636,7 +681,7 @@ hello world
 
 从Java 8 开始可以使用Base64这个类
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+[![复制代码](../media/pictures/Error.assets/copycode-1594393437879.gif)](javascript:void(0);)
 
 ```
 import java.util.Base64;
@@ -657,6 +702,7 @@ public class StringByteArrayExamples
         System.out.println( new String(decoded) );
     }
 }
+
 ```
 
 [![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
@@ -665,6 +711,7 @@ public class StringByteArrayExamples
 
 ```
 hello world
+
 ```
 
 ### 6.遇到图片存储到阿里云 的时候
@@ -673,11 +720,11 @@ hello world
 
 7.Idea设置 去掉 SQL 中 Mapper.xml文件中的下划线 
 
-![image-20191206110349380](Error.assets/image-20191206110349380.png)
+![image-20191206110349380](../media/pictures/Error.assets/image-20191206110349380.png)
 
 ### 7.数据库有默认值  如果没有插入数据中没有值得话 数据库找原因  默认值可以设置
 
-![image-20191210121635073](Error.assets/image-20191210121635073.png)
+![image-20191210121635073](../media/pictures/Error.assets/image-20191210121635073.png)
 
 ### 8.插入语句 中 可以用now() 函数给 create_time直接赋值 
 
@@ -687,13 +734,13 @@ hello world
 
 这个token在登录以后,每一次随便的请求中都可以看到
 
-![image-20191211122547014](Error.assets/image-20191211122547014.png)
+![image-20191211122547014](../media/pictures/Error.assets/image-20191211122547014.png)
 
 ### 用 postman 测试的时候 
 
 加token的地方:
 
-![image-20191211122634440](Error.assets/image-20191211122634440.png)
+![image-20191211122634440](../media/pictures/Error.assets/image-20191211122634440.png)
 
 ### 10.注意debug的时候如果有一个地方没有走到 ,则可能是没有重启,刚写的代码 买有起到作用!
 
@@ -701,15 +748,15 @@ hello world
 
 11.用ftp连接阿里云服务器    下面类型要选SFTP 端口要选22 
 
-![image-20191212183921398](Error.assets/image-20191212183921398.png)
+![image-20191212183921398](../media/pictures/Error.assets/image-20191212183921398.png)
 
 因为阿里云的安全组中配置规则 写的端口是 22 可以用
 
-![image-20191212184057907](Error.assets/image-20191212184057907.png)
+![image-20191212184057907](../media/pictures/Error.assets/image-20191212184057907.png)
 
 添加安全组中 :
 
-![image-20191212184216956](Error.assets/image-20191212184216956.png)
+![image-20191212184216956](../media/pictures/Error.assets/image-20191212184216956.png)
 
 可以自己定义端口和 协议
 
@@ -734,6 +781,7 @@ SHA1 Fingerprint:
 40:61:2f:e0:0a:a8:34:72:13:8b:fc:08:e4:9f:f8:04:f9:52:b4:47
 SHA256 Fingerprint: 
 AoRPtA4w9VHfACnDwZQ0nX3mAoOMtLP6/+g1+THGz2I=
+
 ```
 
 翻译如下:
@@ -748,6 +796,7 @@ AoRPtA4w9VHfACnDwZQ0nX3mAoOMtLP6/+g1+THGz2I=
 服务器地址:47.92.208.93端口:22
 
 主机密钥算法:ECDSA，大小:256位。
+
 ```
 
 
@@ -762,6 +811,7 @@ AoRPtA4w9VHfACnDwZQ0nX3mAoOMtLP6/+g1+THGz2I=
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
 </dependency>
+
 ```
 
 ```xml
@@ -771,13 +821,14 @@ AoRPtA4w9VHfACnDwZQ0nX3mAoOMtLP6/+g1+THGz2I=
             <version>4.12</version>
             <scope>test</scope>
 </dependency>
+
 ```
 
 如果家了依赖以后 还是不能使用单元测试 
 
 则 要将其变为作用域变为test
 
-![image-20191213140819750](Error.assets/image-20191213140819750.png)
+![image-20191213140819750](../media/pictures/Error.assets/image-20191213140819750.png)
 
 
 
@@ -793,13 +844,13 @@ resultMap 继承问题:
 
 然后 在原来生成的resultMap文件中,有一个继承关系:
 
-![image-20191214181710576](Error.assets/image-20191214181710576.png)
+![image-20191214181710576](../media/pictures/Error.assets/image-20191214181710576.png)
 
 而基础的resultMap 是没有新增的字段的 
 
 所以要改基础resultMap  问题的根源在这里!
 
-![image-20191214181810234](Error.assets/image-20191214181810234.png)
+![image-20191214181810234](../media/pictures/Error.assets/image-20191214181810234.png)
 
 
 
@@ -823,6 +874,7 @@ resultMap 继承问题:
             <columnOverride column="gallery" javaType="java.lang.String[]"
                             typeHandler="org.linlinjava.litemall.db.mybatis.JsonStringArrayTypeHandler"/>
         </table>
+
 ```
 
 
@@ -838,6 +890,7 @@ resultMap 继承问题:
      * @mbg.generated
      */
     private String[] gallery;
+
 ```
 
 这样写了以后  生成的bean 也是数组啦
@@ -846,7 +899,7 @@ resultMap 继承问题:
 
 ### 12后台 前台 改请求地址 
 
-![image-20191231141602741](Error.assets/image-20191231141602741.png)
+![image-20191231141602741](../media/pictures/Error.assets/image-20191231141602741.png)
 
 
 
@@ -860,12 +913,14 @@ resultMap 继承问题:
 
 ```
  List<User> getAllUser( Integer id);
+
 ```
 
 将代码改为：
 
 ```
 List<User> getAllUser(@Param("id") Integer id);
+
 ```
 
 
@@ -890,7 +945,7 @@ List<User> getAllUser(@Param("id") Integer id);
 
 ### 17.demical 数据库设置的时候 要记得设置小数位后面的位数
 
-![image-20200113150709066](Error.assets/image-20200113150709066.png)
+![image-20200113150709066](../media/pictures/Error.assets/image-20200113150709066.png)
 
 ### 18  同时 demical 后面位数不同 做除法运算时 要指定保留几位
 
@@ -910,8 +965,7 @@ idea maven打包 install 报错，信息如下：
 
 idea中打包maven项目，有两个install；一直就用Plugins下的install,并 不晓得Lifecycle中的install,经过这次问题，百度了一下，其实lifecycle是maven中一个十分完善的生命周期模型，所以使用Lifecycle中的install项目就会自动去maven仓库下载需要的包。问题解决！
 
-
-![1579493347470](Error.assets/1579493347470.png)
+![1579493347470](../media/pictures/Error.assets/1579493347470.png)
 
 
 
@@ -931,13 +985,13 @@ https://blog.csdn.net/qq_35846773/article/details/80992155
 
 如果redis-cli设置了密码，在配置的时候，没有写密码 则会报这个错误
 
-![1584272021109](Error.assets/1584272021109.png)
+![1584272021109](../media/pictures/Error.assets/1584272021109.png)
 
 需要在这里添加上密码
 
 ### 23.部署vue的时候，协议是http，如果没有申请域名什么的，这里的协议不能是https
 
-![1584273343939](Error.assets/1584273343939.png)
+![1584273343939](../media/pictures/Error.assets/1584273343939.png)
 
 ### 24 .1067 - Invalid default value for 'active_to'
 
@@ -998,7 +1052,7 @@ https://blog.csdn.net/weixin_34037977/article/details/88772681?depth_1-utm_sourc
 
 原因如下：要将 config下面的index.js 也要配置成阿里云对应服务器路径
 
-![1585825356321](Error.assets/1585825356321.png)
+![1585825356321](../media/pictures/Error.assets/1585825356321.png)
 
 源代码如下:
 
@@ -1034,13 +1088,14 @@ if(process.env.NODE_ENV !== 'production'){
 	}
 }
 export default config;
+
 ```
 
 
 
 ### 26.shell连接阿里云服务器时 会出现  等待一下 就能连接上
 
-![1585881838712](Error.assets/1585881838712.png)
+![1585881838712](../media/pictures/Error.assets/1585881838712.png)
 
 如果还是连接不上  看这个  https://blog.csdn.net/weixin_41619143/article/details/89515803 
 
@@ -1048,7 +1103,7 @@ export default config;
 
 ### 27.vue项目打包以后 npm run build 打开dist文件夹 点击index.html
 
-没反应 白屏  百度解决方案是 将baseUrl路径修改为  “./”  前面要加一个点![1586078562848](Error.assets/1586078562848.png)
+没反应 白屏  百度解决方案是 将baseUrl路径修改为  “./”  前面要加一个点![1586078562848](../media/pictures/Error.assets/1586078562848.png)
 
 一般的项目  修改这个是在config下面index.js里面修改  这个比较特殊。
 
@@ -1070,6 +1125,7 @@ WHERE
 	
 	AND id NOT IN 
 	(SELECT MAX(id) as id FROM test GROUP BY year HAVING COUNT( year ) > 1) 
+
 ```
 
 按照上面写法运行的时候，报错啦。**解决方案是在外面包装一层。**
@@ -1088,6 +1144,7 @@ WHERE
 	
 	AND id NOT IN 
 	(SELECT id FROM (SELECT MAX(id) as id FROM test GROUP BY year HAVING COUNT( year ) > 1) b )
+
 ```
 
 
@@ -1103,8 +1160,10 @@ springboot中java.lang.IllegalStateException: No typehandler found for property 
 
 
 ### 2本来需要两个参数 结果写了一个
+
 ```
 java.util.MissingFormatArgumentException: Format specifier '%s'
+
 ```
 
 参考：https://www.cnblogs.com/qingmuchuanqi48/p/11528905.html
@@ -1120,16 +1179,18 @@ public ResposeVO invoiceList(@RequestBody @Valid InvoiceListDTO dto)  {
     return ResponseFactory.ok(invoiceService.invoiceList(dto));
 }
 
+
 ```
+
 ### 4.navicat连接oracle 出现ORA-28547错误
 
-![1589852203018](Error.assets/1589852203018.png)
+![1589852203018](D:/Code/Typora/docs/media/media/pictures/Error.assets/1589852203018.png)
 
 需要下载一个软件
 
 参考：https://blog.csdn.net/gaoying_blogs/article/details/45440797
 
-![1589853010163](Error.assets/1589853010163.png)
+![1589853010163](../media/pictures/Error.assets/1589853010163.png)
 
 ### 4.Error starting ApplicationContext. To display the auto-configuration report re-run your application with 'debug' enabled.
 
@@ -1139,19 +1200,22 @@ public ResposeVO invoiceList(@RequestBody @Valid InvoiceListDTO dto)  {
 
 
 
-### 5.讲application.properities  换成 application.yml 会报错 ![1589878942377](Error.assets/1589878942377.png)
+### 5.讲application.properities  换成 application.yml 会报错
+
+ ![1589878942377](../media/pictures/Error.assets/1589878942377.png)
 
 可能是springboot版本太低，识别不了 name
 
 name需要单独加在application.properties，这样项目就可以启动啦 
 
-![1589879197328](Error.assets/1589879197328.png)
+![1589879197328](../media/pictures/Error.assets/1589879197328.png)
 
 
 
 ```
 spring.application.name=cdsw-install
 #spring.profiles.active=dev
+
 ```
 
 
@@ -1164,6 +1228,7 @@ spring.application.name=cdsw-install
     <artifactId>snakeyaml</artifactId>
     <version>1.25</version>
 </dependency>
+
 ```
 
 
@@ -1176,13 +1241,13 @@ https://www.toyaml.com/index.html
 
 boot版本很低
 
-![1589879969448](Error.assets/1589879969448.png)
+![1589879969448](../media/pictures/Error.assets/1589879969448.png)
 
 
 
 ### 34.在构建SpringCloud项目的时候 ，父工程的pom文件，一定要打包，打包方式为pom
 
-![1589941162386](Error.assets/1589941162386.png)
+![1589941162386](../media/pictures/Error.assets/1589941162386.png)
 
 ```xml
 <groupId>com.atguigu.springcloud</groupId>
@@ -1193,6 +1258,7 @@ boot版本很低
 <modules>
     <module>cloud-provider-payment8001</module>
 </modules>
+
 ```
 
 
@@ -1201,6 +1267,7 @@ boot版本很低
 
 ```xml
 <packaging>pom</packaging>
+
 ```
 
 
@@ -1211,7 +1278,7 @@ boot版本很低
 
 然后看看mapper.xml里面
 
-![1590049820995](Error.assets/1590049820995.png)
+![1590049820995](../media/pictures/Error.assets/1590049820995.png)
 
 
 
@@ -1224,6 +1291,7 @@ boot版本很低
     <id column="id" property="id" jdbcType="BIGINT" />
     <id column="serial" property="serial" jdbcType="VARCHAR"/>
 </resultMap>
+
 ```
 
 原来错误的写法是：type里面路径没有写全路径，所以会报错
@@ -1232,13 +1300,13 @@ boot版本很低
 
 ### 7.一个服务调用另一个服务，如果服务提供者在参数之前没有加@RequestBody，那么写到数据库中的值会是一个空。
 
-![1590054248363](Error.assets/1590054248363.png)
+![1590054248363](../media/pictures/Error.assets/1590054248363.png)
 
 
 
 如果服务提供者加上@RequestBody的话，就可以插入数据库啦。
 
-![1590054368477](Error.assets/1590054368477.png)
+![1590054368477](../media/pictures/Error.assets/1590054368477.png)
 
 
 
@@ -1260,6 +1328,7 @@ public static final String PAYMENT_URL = "http://localhost:8001";
     public CommonResult< Payment > create(Payment payment) {
         return restTemplate.postForObject(PAYMENT_URL + "/payment/create", payment, CommonResult.class);
     }
+
 ```
 
 服务提供者：
@@ -1277,6 +1346,7 @@ public static final String PAYMENT_URL = "http://localhost:8001";
             return new CommonResult(444,"插入数据库失败",null);
         }
     }
+
 ```
 
 
@@ -1291,7 +1361,7 @@ https://blog.csdn.net/justry_deng/article/details/80972817  写的比较详细�
 
 网络适配器里面 将虚拟机网卡禁用掉。
 
-![1590629023124](Error.assets/1590629023124.png)
+![1590629023124](../media/pictures/Error.assets/1590629023124.png)
 
 
 
@@ -1301,7 +1371,7 @@ https://blog.csdn.net/justry_deng/article/details/80972817  写的比较详细�
 
 将这里这个地方改了 就不会提示报错啦。原来是Error，改成warring。
 
-![1590718779908](Error.assets/1590718779908.png)
+![1590718779908](../media/pictures/Error.assets/1590718779908.png)
 
 
 
@@ -1318,19 +1388,21 @@ https://blog.csdn.net/justry_deng/article/details/80972817  写的比较详细�
 ```shell
 首先 
 git log 查看提交日，这里面会有一些提交日志
+
 ```
 
 可以上下翻页来看
 
-![1590985524131](Error.assets/1590985524131.png)
+![1590985524131](../media/pictures/Error.assets/1590985524131.png)
 
 然后复制对应的版本号
 
 ```shell
 git reset --hard 9897c32a759ecdc802f6160ff33fb9c91134062d  然后强制回退到对应的版本
+
 ```
 
-![1590985608020](Error.assets/1590985608020.png)
+![1590985608020](../media/pictures/Error.assets/1590985608020.png)
 
 
 
@@ -1342,15 +1414,16 @@ git push --force-with-lease origin master
 git push --force-with-lease <远程主机名> <本地分支名>:<远程分支名> 完整的命令是这个样子的
 
 git push --force-with-lease  origin  luquan-nacos  比如回退鹿泉的就要这么写
+
 ```
 
-![1590985712725](Error.assets/1590985712725.png)
+![1590985712725](../media/pictures/Error.assets/1590985712725.png)
 
 
 
 回退完了git log再看，就是这个样子，想要回退的commit。
 
-![1590985899071](Error.assets/1590985899071.png)
+![1590985899071](../media/pictures/Error.assets/1590985899071.png)
 
 
 
@@ -1386,7 +1459,7 @@ git push --force-with-lease  origin  luquan-nacos  比如回退鹿泉的就要�
 
 
 
-![1591064847347](Error.assets/1591064847347.png)
+![1591064847347](../media/pictures/Error.assets/1591064847347.png)
 
 
 
@@ -1434,6 +1507,296 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
+### 16.有道云 自动取词打开 以后 发现navicat会闪退 用不了啦。
+
+需要关闭以后才可以，感觉好神奇。
+
+https://blog.csdn.net/Wu_Xiao_Man/article/details/82863152
+
+https://blog.csdn.net/Mingyueyixi/article/details/81181837?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
+
+
+
+### 17.成都自来水 Oracle ID自增
+
+代码中是使用的序列，代码中是这样使用的：
+
+序列在selectKey中放着。
+
+```xml
+<insert id="insert" parameterType="com.jdrx.install.beans.entity.OrderPersonPO">
+        <selectKey keyProperty="id" resultType="long" order="BEFORE">
+            select SEQUENCE_1.NEXTVAL as ID from dual
+        </selectKey>
+
+        insert into T_BIZ_ORDER_PERSON (ID, INSTALL_ID, INSTALL_NO, ORDER_STATUS,NODE_NAME,ORDER_ID, ACCEPT_ID,
+        UPDATE_AT, UPDATE_BY, CREATE_AT, CREATE_BY,
+        ORDER_TYPE,NODE_FLAG,PROCESS_CLASSIFY,INSTANCE_ID,TASK_ID,WECHAT_ID)
+        values (#{id,jdbcType=DECIMAL}, #{installId,jdbcType=DECIMAL}, #{installNo,jdbcType=VARCHAR},
+        #{orderStatus,jdbcType=DECIMAL},
+        #{nodeName,jdbcType=VARCHAR } ,#{orderId,jdbcType=DECIMAL},#{acceptId,jdbcType=DECIMAL},
+        #{updateAt,jdbcType=TIMESTAMP},
+        #{updateBy,jdbcType=DECIMAL}, SYSDATE, #{createBy,jdbcType=DECIMAL},#{orderType,jdbcType=DECIMAL},
+        #{nodeFlag,jdbcType=VARCHAR }, #{processClassify,jdbcType=VARCHAR },#{instanceId,jdbcType=VARCHAR},
+        #{taskId,jdbcType=VARCHAR},#{wechatId,jdbcType=DECIMAL}
+
+        )
+</insert>
+```
+
+
+
+如果想在navicat中直接使用：这样写
+
+```sql
+INSERT INTO CD_WATER_BZ.T_CONSULATATION_FOLLOWUP_LIST(ID,NAME,TYPE)  VALUES ((SEQUENCE_1.NEXTVAL),'zhangsan',1);
+
+```
+
+
+
+
+
+
+
+## 二次供水系统
+
+### 1.Caused by: java.lang.IllegalStateException: Ambiguous mapping found. Cannot map 'appController' bean method
+
+出现这个问题的原因是 请求url重复啦。
+
+解决方案：https://stackoverflow.com/questions/33854225/caused-by-java-lang-illegalstateexception-ambiguous-mapping-found-cannot-map
+
+
+
+### 2.org.apache.ibatis.builder.BuilderException: Error creating document instance. 
+
+### Cause: org.xml.sax.SAXParseException; lineNumber: columnNumber:  元素内容必须由格式正确的字符数据或标记组成。
+
+
+
+出现这个问题主要原因是：
+
+```xml
+<if test="startTime != null">
+    and create_at <![CDATA[>=]]> #{startTime}
+</if>
+<if test="endTime != null">
+    and create_at <![CDATA[<=]]> #{endTime}
+</if>
+
+```
+
+xml里面的   >=  不能直接写，要写成 <![CDATA[>=]]>   这种样子。
+
+参考：stockoverflow https://stackoverflow.com/questions/2784183/what-does-cdata-in-xml-mean 这篇文章 写的还是很好的。
+
+
+
+### 3.碰见一个奇怪的问题 idea识别不到某个包下的文件  
+
+重启idea 怎么都不行 然后把这个文件删了，重新建立了一个就好了。
+
+
+
+### 4.ERROR: column reference "create_at" is ambiguous
+
+联合查询 所有的字段 都要写成别名.列名  where 后面的也不例外
+
+
+
+5.java.lang.NoSuchMethodError    okio.BufferedSource.rangeEquals(JLokio/ByteString;)Z
+
+
+
+这是在二供的调用ocp的时候，调用网关时候遇到的错误。
+
+错误原因是，公司的一些内部包里面已经包含了OKHTTP这个包，结果自己又引入一个，所以导致依赖里面有两个包。
+
+之所以包没有找到类似的方法，个人感觉是两个包不知道用哪个。
+
+
+
+之所以出现下面的这个问题是因为，导入的这两个包估计有优先级，可能某一个版本正好没有正在使用的方法，所以报错啦。
+
+
+
+总结：包重复，版本不一样，方法有一个包没有。
+
+​          还有一种情况就是，几个module直接依赖互相引用，也可能出错。
+
+
+
+### 5 碰到一个问题 就是两个DTO里面如果@ApiModel(value = "工单详情获取设备id和name", description = "工单详情获取设备id和name")  里面写的一样，那么在swagger里面就会在一起
+
+```java
+@ApiModel(value = "工单详情", description = "工单详情")
+public class WorkOrderDeviceNameAndIdDTO {
+    
+    private Long pumpHouseId;
+    
+}
+
+```
+
+```java
+@ApiModel(value = "工单详情", description = "工单详情")
+public class WorkOrderDetailDTO {
+   
+    private Long id;
+    
+}
+
+```
+
+
+
+就是这本来是两个DTO，但是这个@ApiModel注解里面的value是一样的，所以在swagger里面会出现，两个在一起放着这种情况。
+
+![1593743965986](../media/pictures/Error.assets/1593743965986.png)
+
+
+
+### 6.pgsql 主键加了序列，但是还是输入数据库报错id为空。看mybatis的xml文件，
+
+![1594015191584](../media/pictures/Error.assets/1594015191584.png)
+
+
+
+id设置了序列以后，需要重新生成一下xml，这样新生成的xml文件里面没有id，就不会报错啦
+
+![1594015262150](../media/pictures/Error.assets/1594015262150.png)
+
+
+
+## 自己学习SpringCloud Docker
+
+### 1.Error response from daemon: Conflict. The container name "/mysql" is already in use by container
+
+
+
+docker 容器重名 需要先删除以前的docker容器
+
+```
+首先
+docker ps -a  查看所有docker容器 
+
+然后 
+docker rm 容器id
+```
+
+![1594023962301](../media/pictures/Error.assets/1594023962301.png)
+
+
+
+### 2.在阿里云Docker安装RabbitMQ以后，阿里云安全组也都打开，但是外面访问不了主页。这时候需要：
+
+```shell
+#开启插件：首先使用命令进入容器  
+docker exec -it myrabbitmq bash
+
+#开启插件命令：
+rabbitmq-plugins enable rabbitmq_management
+```
+
+![1594026000747](../media/pictures/Error.assets/1594026000747.png)
+
+然后就可以访问了：
+
+![1594026017460](../media/pictures/Error.assets/1594026017460.png)
+
+
+
+### 3.修改Docker下面的nginx配置文件，发现vim，vi用不了
+
+1.使用docker 下载nginx 镜像  docker pull nginx
+
+2.启动nginx
+
+docker run --name nginx -p 80:80 -d nginx
+
+这样就简单的把nginx启动了，但是我们想要改变配置文件nginx.conf ，进入容器,命令：
+
+docker exec -it nginx bash
+
+nginx.conf配置文件在 /etc/nginx/  下面，但是你使用vim nginx.conf 或者vi nginx.conf
+
+会发现vi或者vim命令没有用，解决办法：apt-get  update  完成之后 apt-get install vim
+
+此时你就可以自己定制nginx.con文件了，改好配置文件之后重启容器，步骤，先把容器停了
+
+docker stop nginx  然后重启 docker start nginx
+
+
+
+第二种方式：
+
+这样不是很方便，还有第二种方式，挂载配置文件，就是把装有docker宿主机上面的nginx.conf配置文件映射到启动的nginx容器里面，这需要你首先准备好nginx.con配置文件,如果你应经准备好了，下一步是启动nginx
+
+命令：
+
+```shell
+docker run --name nginx -p 80:80 -v /home/docker-nginx/nginx.conf:/etc/nginx/nginx.conf
+-v /home/docker-nginx/log:/var/log/nginx
+-v /home/docker-nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf -d nginx
+```
+
+解释下上面的命令：
+
+--name  给你启动的容器起个名字，以后可以使用这个名字启动或者停止容器
+
+-p 映射端口，将docker宿主机的80端口和容器的80端口进行绑定
+
+-v 挂载文件用的，第一个-v 表示将你本地的nginx.conf覆盖你要起启动的容器的nginx.conf文件，第二个表示将日志文件进行挂载，就是把nginx服务器的日志写到你docker宿主机的/home/docker-nginx/log/下面
+
+第三个-v 表示的和第一个-v意思一样的。
+
+-d 表示启动的是哪个镜像
+
+
+
+我个人更喜欢第二种映射的方式，麻烦的是需要自己准备好nginx.conf 和default.conf文件，我是直接从容器里面复制的，然后根据自己的需要改的
+
+
+
+参考：https://www.cnblogs.com/zfding/p/11429695.html 	 	
+
+
+
+### 4 docker 用-d 启动nginx 没反应。也没启动起来。
+
+因为-d启动，是静默启动，如果在docker ps 里面没有这个服务记得去掉
+
+-d 试试。
+
+
+
+### 5.nginx配置 两个要写在不同文件里面。
+
+旧版本是在一个文件中，新的版本在两个文件中。
+
+```
+   upstream cluster{
+        server 47.92.208.93:8848;
+        server 47.92.208.93:8849;
+        server 47.92.208.93:8850;
+    }
+
+  location / {
+        #root   /usr/share/nginx/html;
+        #index  index.html index.htm;
+        proxy_pass http://cluster;
+  }
+```
+
+**需要注意的点**，upstream cluster{} 在nginx.conf里面写，下面的localtion / {} 在conf.d/fefault.conf写。
+
+这里搞了一下午。（^-^）
+
+
+
+
+
 
 
 
@@ -1456,8 +1819,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
-![1591608464397](Error.assets/1591608464397.png)
+![1591608464397](../media/pictures/Error.assets/1591608464397.png)
 
-![1591608402368](Error.assets/1591608402368.png)
+![1591608402368](../media/pictures/Error.assets/1591608402368.png)
 
 图片里面还有一个PDF，上面有详细的征信记录。
