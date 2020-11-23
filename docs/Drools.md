@@ -1,5 +1,17 @@
 # Drools
 
+注意：SpringBoot版本和Drools版本直接的兼容问题。
+
+Maven仓库：
+
+Drools：https://mvnrepository.com/artifact/org.kie/kie-spring  
+
+SpringBoot： https://mvnrepository.com/artifact/org.springframework.boot/spring-boot
+
+学习的视频是18年的，用的SpringBoot是2.0.x  对应的Drools用的7.6.x
+
+公司成都自来水项目17年开始 SpringBoot 1.4.5 对应的Drools应该是7.0.x
+
 ## 1. 问题引出
 
 现有一个在线申请信用卡的业务场景，用户需要录入个人信息，如下图所示：

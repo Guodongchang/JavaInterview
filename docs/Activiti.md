@@ -340,6 +340,36 @@ public void initTable2() {
 
 就是关于配置一些数据源，数据库连接池等。
 
+在后续使用过程中，发现中文写入数据库的时候会出现？，这应该是编码的问题。看数据库编码没有问题就是utf-8，那就是传过去的时候有问题。
+
+所以需要在数据库连接后面加： **?characterEncoding=utf-8**
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+        <property name="jdbcDriver" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://47.92.208.93:3306/activiti?characterEncoding=utf-8"></property>
+        <property name="jdbcUsername" value="root"></property>
+        <property name="jdbcPassword" value="123456"></property>
+
+        <!--            
+            flase： 默认值。activiti在启动时，会对比数据库表中保存的版本，如果没有表或者版本不匹配，将抛出异常。
+            true： activiti会对数据库中所有表进行更新操作。如果表不存在，则自动创建。
+            create_drop： 在activiti启动时创建表，在关闭时删除表（必须手动关闭引擎，才能删除表）。
+            drop-create： 在activiti启动时删除原来的旧表，然后在创建新表（不需要手动关闭引擎）。 
+        -->
+        <!--用那种方式就将上面的替换value里面的值-->
+        <property name="databaseSchemaUpdate" value="true"></property> 
+    </bean>
+</beans>
+
+```
+
 
 
 ## 核心API
@@ -519,6 +549,472 @@ https://www.activiti.org/designer/update/
 
 
 
+## HelloWord程序（模拟流程的执行）
+
+### 画流程图
+
+![image-20200924100913207](../media/pictures/Activiti.assets/image-20200924100913207.png)
+
+#### 设置属性
+
+在画完流程图以后，需要填写属性，就需要找到这个菜单
+
+![image-20200924100704844](../media/pictures/Activiti.assets/image-20200924100704844.png)
+
+
+
+#### 设置任务办理人
+
+![image-20200924101407976](../media/pictures/Activiti.assets/image-20200924101407976.png)
+
+
+
+#### 修改流程id和name
+
+![image-20200924101455935](../media/pictures/Activiti.assets/image-20200924101455935.png)
+
+
+
+##### 遇到的问题
+
+因为eclipse默认是GBK格式，如果没有修改成utf-8的时候，写到数据库，就会出现乱码。
+
+将eclipse中的Utf-8代码复制到Idea中，进行流程部署，这个Helloworld.bpmn文件，就会变成GBK。
+
+原因是Idea设置编码少设置一个utf-8，这几个地方都设置了才可以。
+
+![image-20200924171414374](../media/pictures/Activiti.assets/image-20200924171414374.png)
+
+这种方式只对当前文件项目有作用。想让对新项目有作用，需要下面这种设置
+
+![image-20200925173430538](../media/pictures/Activiti.assets/image-20200925173430538.png)
+
+##### 一些表的名称功能
+
+```sql
+#RepositoryService
+SELECT * FROM ACT_GE_BYTEARRAY;    #二进制文件表
+SELECT * FROM ACT_RE_DEPLOYMENT;   #流程部署表
+SELECT * FROM ACT_RE_PROCDEF;			 #流程定义
+SELECT * FROM ACT_GE_PROPERTY;		 #工作流的ID算法和版本信息表
+
+#RuntimeService  TaskService
+SELECT * FROM ACT_RU_EXECUTION;    #流程启动一次只要没有执行完，就会有一条记录
+SELECT * FROM ACT_RU_TASK;				 #可能有多条数据
+SELECT * FROM ACT_RU_VARIABLE;		 #记录流程运行时的流程变量
+SELECT * FROM ACT_RU_IDENTITYLINK; #存放流程办理人的信息
+
+#HistroyService 
+SELECT * FROM ACT_HI_PROCINST;     #历史流程实例
+SELECT * FROM ACT_HI_TASKINST;     #历史任务实例
+SELECT * FROM ACT_HI_ACTINST;      #历史活动节点表
+SELECT * FROM ACT_HI_VARINST;      #历史流程变量表
+SELECT * FROM ACT_HI_IDENTITYLINK; #历史办理人表
+SELECT * FROM ACT_HI_COMMENT;      #批注表
+SELECT * FROM ACT_HI_ATTACHMENT;   #附件表
+
+#IdentityService
+SELECT * FROM ACT_ID_GROUP;        #角色
+```
+
+
+
+### 流程部署定义
+
+```java
+/**
+* 部署流程定义
+*/
+@Test
+public void deploymentProcessDefinition() {
+
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    Deployment deployment = repositoryService.createDeployment()//与流程定义和部署对象相关的Service
+        .name("请假流程001")//添加部署的名称
+
+        .addClasspathResource("Helloworld1.bpmn") //从classpath的资源中加载，一次只能加载一个文件
+        //.addClasspathResource("Helloworld.png") //从classpath的资源中加载，一次只能加载一个文件
+        .deploy();//完成部署
+
+    System.out.println("部署ID：" + deployment.getId());//1
+    System.out.println("部署名称：" + deployment.getName());//helloworld入门程序 
+}
+```
+
+
+
+### 启动流程
+
+```java
+/**
+* 启动流程
+*/
+@Test
+public void startProcess() {
+    RuntimeService runtimeService = this.processEngine.getRuntimeService();
+    String processDefinitionId = "HelloWorld:1:4";
+    String processDefinitionkey = "HelloWorld";
+    runtimeService.startProcessInstanceByKey(processDefinitionkey);
+    System.out.println("流程启动成功");
+}
+```
+
+
+
+### 查询任务
+
+```java
+/**
+* 查询任务
+*/
+@Test
+public void findTask() {
+    TaskService taskService = this.processEngine.getTaskService();
+    String assignee = "王五";
+    List<Task> list = taskService.createTaskQuery().taskAssignee(assignee).list();
+
+    if (null != list && list.size() > 0)
+        for (Task task : list) {
+            System.out.println("任务ID:" + task.getId());
+            System.out.println("，流程实例ID:" + task.getProcessInstanceId());
+            System.out.println("流程任务ID:" + task.getExecutionId());
+            System.out.println("流程定义ID:" + task.getProcessDefinitionId());
+            System.out.println("任务名称:" + task.getName());
+            System.out.println("任务办理人:" + task.getAssignee());
+            System.out.println("####################################");
+        }
+}
+```
+
+
+
+### 办理任务
+
+```java
+/**
+* 办理任务
+*/	
+@Test
+public void completeTask(){
+    TaskService taskService = this.processEngine.getTaskService();
+    String taskId = "10002";
+    taskService.complete(taskId);
+    System.out.println("任务完成");
+}
+```
+
+
+
+## 管理流程定义
+
+功能 ： 对流程的增加、修改、删除、查询。
+
+act_ge_bytearray 、act_re_deployment、act_re_procdef
+
+
+
+### 流程图
+
+![image-20200925154442377](../media/pictures/Activiti.assets/image-20200925154442377.png)
+
+### 部署流程两种方式
+
+#### classpath
+
+```java
+/**
+* 部署流程使用classpath
+*/
+@Test
+public void deployProcess01() {
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    Deployment deployment = repositoryService.createDeployment()//与流程定义和部署对象相关的Service
+        .name("请假流程001")//添加部署的名称
+        .addClasspathResource("Helloworld.bpmn") //从classpath的资源中加载，一次只能加载一个文件
+        //.addClasspathResource("Helloworld.png") //从classpath的资源中加载，一次只能加载一个文件
+        .deploy();//完成部署
+
+    System.out.println("部署ID：" + deployment.getId());//1
+    System.out.println("部署名称：" + deployment.getName());//helloworld入门程序 
+}
+```
+
+
+
+#### zip
+
+```java
+/**
+* 部署流程使用zip
+* 流程图文件必须是xxxx.zip
+*/
+@Test
+public void deployProcess02() {
+    //如果不加/ 代表从当前包里面找文件
+    //InputStream inputStream = this.getClass().getClass().getResourceAsStream("HelloWorld.zip");
+    //如果加/ 代表从classpath的根目录中找文件
+    InputStream inputStream = this.getClass().getClass().getResourceAsStream("/HelloWorld.zip");
+    System.out.println(inputStream);
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+    Deployment deploy = repositoryService.createDeployment()
+        .name("请假流程001")
+        .addZipInputStream(zipInputStream) // 添加流程图的流
+        .deploy();//确定部署
+    System.out.println("部署成功, 部署id" + deploy.getId());
+}
+```
+
+
+
+### 查询部署信息 act_re_deployment
+
+```java
+/**
+	 * 查询流程定义 act_re_deployment
+	 */
+@Test
+public void queryProcessDef() {
+
+    String deploymentId = "1";
+
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    //创建部署信息的查询
+    //Deployment deployment = repositoryService.createDeploymentQuery()
+    //Long count = repositoryService.createDeploymentQuery()
+    List<Deployment> deploymentList = repositoryService.createDeploymentQuery()
+        //条件
+        //.deploymentId(deploymentId)           //根据部署ID去查询
+        //.deploymentName(name)                 //根据部署名称去查询
+        //.deploymentTenantId(tentantId)        //根据 tenantId去查询  
+        //.deploymentNameLike(nameLike)         //根据部署名称模糊查询
+        //.deploymentTenantIdLike(tenantIdLike) //根据tenantId模糊查询
+
+        //排序
+        //.orderByDeploymentId().asc()          //根据部署ID升序
+        //.orderByDeploymenTime().desc()        //根据部署时间降序
+        //.orderByDeploymentName()                //根据部署名称升序
+
+        //结果集
+        .list(); //查询返回list集合
+    //.listPage(firstResult,maxResults) //分页查询返回list集合
+    //.singleResult();//返回单个对象
+    //.count();
+
+    for (Deployment deployment : deploymentList) {
+        System.out.println("部署ID：" + deployment.getId());
+        System.out.println("部署名称：" + deployment.getName());
+        System.out.println("部署时间：" + deployment.getDeploymentTime());
+        System.out.println("-------------------------------------------");
+    }
+
+    //		System.out.println(count);
+
+    //		System.out.println("部署ID：" + deployment.getId());
+    //		System.out.println("部署名称：" + deployment.getName());
+    //		System.out.println("部署时间：" + deployment.getDeploymentTime());
+}
+```
+
+
+
+### 查询流程定义 act_re_procdef
+
+```java
+/**
+	 * 查询流程定义 act_re_procdef
+	 */
+@Test
+public void queryproDef() {
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery()
+        //条件
+        //.deploymentId(deploymentId)                                              //根据部署ID查询
+        //.deploymentIds(processDefinitionIds)                                     //根据部署ID的集合查询Set<String> deploymentIds
+        //.processDefinitionId(processDefinitionId)                                // 根据流程定义ID HelloWorld:1:4
+        //.processDefinitionIds(processDefinitionIds)                              //根据流程定义的IDS查询
+
+        //.processDefinitionKey(ProcessDefinitionKey)                              //根据流程定义的key值
+        //.processDefinitionKeyLike(ProcessDefinitionKeyLike)                      //根据流程定义的key模糊查询
+
+        //.processDefinitionName(ProcessDefinitionName)                            //根据流程定义的名称查询
+        //.processDefinitionNameLike(ProcessDefinitionNameLike)                    //根据流程定义的名称模糊查询
+
+        //.processDefinitionResourceName(resourceName)                             //根据流程图的BPMN的文件名称查询
+        //.processDefinitionResourceNameLike(resourceNameLike)                     //根据流程图的BPMN文件名称模糊查询
+
+        //.processDefinitionVersion(ProcessDefinitionVersion)                      //根据流程定义的版本查询
+        //.processDefinitionVersionGreaterThan(ProcessDefinitionVersion)           //version>num
+        //.processDefinitionVersionGreaterThanOrEquals(ProcessDefinitionVersion)   //version>=num
+        //.processDefinitionVersionLowerThan(ProcessDefinitionVersion)			   //version<num
+        //.processDefinitionVersionLowerThanOrEquals(ProcessDefinitionVersion)       //version<=num
+
+        //排序
+        //.orderByDeploymentId()
+        //.orderByDeploymentId()
+        //.orderByProcessDefinitionId()
+        //.orderByProcessDefinitionKey()
+        //.orderByProcessDefinitionName()
+        //.orderByProcessDefinitionVersion()
+
+        //结果集		
+        .list();
+    //.listPage(firstResult,maxResults)
+    //.count()
+    //.singleResult()
+
+    if (null != list && list.size() > 0) {
+        for (ProcessDefinition pd : list) {
+            System.out.println("流程定义ID:" + pd.getId());                               //流程定义的key+版本+随机生成数
+            System.out.println("部署对象ID：" + pd.getDeploymentId());
+            System.out.println("流程定义的key:" + pd.getKey());                           //对应helloworld.bpmn文件中的id属性值
+            System.out.println("流程定义的名称:" + pd.getName());                         //对应helloworld.bpmn文件中的name属性值
+            System.out.println("资源名称bpmn文件:" + pd.getResourceName());               //bpmn的name
+            System.out.println("资源名称png文件:" + pd.getDiagramResourceName());         //png的name
+            System.out.println("流程定义的版本:" + pd.getVersion());                      //当流程定义的key值相同的相同下，版本升级，默认1
+            System.out.println("#########################################################");
+        }
+    }
+}
+```
+
+
+
+### 删除流程定义信息
+
+首先需要启动流程，再删除流程
+
+```java
+/**
+* 启动流程
+*/
+@Test
+public void startProcess() {
+    RuntimeService runtimeService = this.processEngine.getRuntimeService();
+    String processDefinitionkey = "HelloWorld";
+    runtimeService.startProcessInstanceByKey(processDefinitionkey);
+    System.out.println("流程启动成功");
+}
+
+/**
+* 删除流程定义
+*/
+@Test
+public void deleteProcessDefinition() {
+
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    //使用部署ID，完成删除
+    String deploymentId = "5001";
+
+    //不带级联的删除 只能删除没有启动的流程，如果流程启动，就会抛出异常
+    //repositoryService.deleteDeployment(deploymentId); //直接删除是会报错的，报错原因是因为有外键
+
+    //级联删除 不管流程是否启动，都能可以删除
+    repositoryService.deleteDeployment(deploymentId, true);
+    System.out.println("删除成功！");
+}
+```
+
+
+
+### 修改流程定义信息
+
+修改流程图之后重新部署，只要key不变，它的版本号就会+1。
+
+![image-20200928171856581](../media/pictures/Activiti.assets/image-20200928171856581.png)
+
+
+
+为什么不是把之前的流程图删掉重新部署新的呢？
+
+答：因为原来的流程卡能有没有执行完成的任务，修改流程图以后，只是版本+1，新的流程走新的流程图，旧的流程走旧的流程图。
+
+
+
+### 查询流程图
+
+```java
+/**
+* 查询流程图 根据流程定义ID
+* 这里要注意 这里必须要在流程部署的时候先把流程图的png写入，这里才可以再次操作，否则这里输出的不是一个完整的图片
+*/
+@Test
+public void viewProcessImg() {
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+    String processDefinitionId = "HelloWorld:1:4";
+    InputStream inputStream = repositoryService.getProcessDiagram(processDefinitionId);
+
+    File file = new File("D:/Helloworld.png");
+
+    try { //对于流来说，一般都会产生异常，所以要有异常处理程序
+
+        //缓冲流 指定缓冲区大小 当时学习的时候的car，将东西分块放入缓冲区中
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+
+        int len = 0;   //每一次读取到的长度 （将读取到的放入数组，其实就是数组的长度）
+        byte[] b = new byte[1024]; //1024保证数组bai的容量，没其它意思
+        while ((len = inputStream.read(b)) != -1) { //接收屏幕输入，存入b,同时读取的个数赋值给len
+            outputStream.write(b, 0, len); //将字节数组byte写入流中，起始是0，到len
+            outputStream.flush();   //强制刷新缓冲区
+        }
+        outputStream.close();
+        inputStream.close();
+        System.out.println("输出成功！");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+/**
+* 查询流程图 根据流程部署ID
+*/
+@Test
+public void viewProcessImg2() {
+    RepositoryService repositoryService = this.processEngine.getRepositoryService();
+
+    //根据流程部署ID查询流程定义对象
+    String deploymentId = "1";
+    ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).singleResult();
+
+    //从流程定义对象里面查询流程定义ID
+    String processDefinitionId = processDefinition.getId();
+    InputStream inputStream = repositoryService.getProcessDiagram(processDefinitionId);
+
+    File file = new File("D:/" + processDefinition.getDiagramResourceName());
+
+    try { //对于流来说，一般都会产生异常，所以要有异常处理程序
+
+        //缓冲流 指定缓冲区大小 当时学习的时候的car，将东西分块放入缓冲区中
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+
+        int len = 0;   //每一次读取到的长度 （将读取到的放入数组，其实就是数组的长度）
+        byte[] b = new byte[1024]; //1024保证数组bai的容量，没其它意思
+        while ((len = inputStream.read(b)) != -1) { //接收屏幕输入，存入b,同时读取的个数赋值给len
+            outputStream.write(b, 0, len); //将字节数组byte写入流中，起始是0，到len
+            outputStream.flush();   //强制刷新缓冲区
+        }
+        outputStream.close();
+        inputStream.close();
+        System.out.println("输出成功！");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+
+
+### 附加功能：查询最新版本流程定义
+
+62
+
+
+
+
+
+
+
+### 附加功能：删除流程定义（删除key相同的所有不同版本的流程定义）
 
 
 
@@ -537,7 +1033,86 @@ https://www.activiti.org/designer/update/
 
 
 
-# 项目中的工作流
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Project Activiti
 
 流程管理-流程部署  是比较基本的  这里有的话，
 
@@ -562,3 +1137,8 @@ https://blog.csdn.net/qq_39459412/article/details/80427236
 https://blog.csdn.net/yerenyuan_pku/article/details/71307305?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase
 
 https://blog.csdn.net/zbdxcyg/article/details/78519773?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase
+
+```
+
+```
+
