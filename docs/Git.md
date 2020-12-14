@@ -336,7 +336,7 @@ git log 查看提交日，这里面会有一些提交日志
 
 可以上下翻页来看
 
-![1590985524131](../media/pictures/Git.assets/1590985524131.png)
+<img src="../media/pictures/Git.assets/1590985524131.png" alt="1590985524131" style="zoom: 50%;" />
 
 然后复制对应的版本号
 
@@ -392,7 +392,7 @@ https://blog.csdn.net/asoar/article/details/84111841?utm_medium=distribute.pc_re
 
 ## Idea中配置git的terminal
 
-![](../media/pictures/Git.assets/a15b1912d084d0f9e95bac45b2050b04.png)
+<img src="../media/pictures/Git.assets/a15b1912d084d0f9e95bac45b2050b04.png" style="zoom: 67%;" />
 
 
 
