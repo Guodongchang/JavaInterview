@@ -540,13 +540,10 @@ docker cp nacos:/home/nacos/conf/schema.sql /
 
 这个图很秀
 
-<img src="../media/pictures/Docker.assets/1591254588030.png" alt="1591254588030" style="zoom: 33%;" />
-
-
+![1591254588030](../media/pictures/Docker.assets/1591254588030.png)
 
 help里面的全部命令：
 
-```
 attach    Attach to a running container                 # 当前 shell 下 attach 连接指定运行镜像
 
 build     Build an image from a Dockerfile              # 通过 Dockerfile 定制镜像
@@ -620,13 +617,12 @@ unpause   Unpause a paused container                    # 取消暂停容器
 version   Show the docker version information           # 查看 docker 版本号
 
 wait      Block until a container stops, then print its exit code   # 截取容器停止时的退出状态值
-```
 
 
 
 #### 为什么装完的tomcat很大？
 
-<img src="../media/pictures/Docker.assets/1591256494829.png" alt="1591256494829" style="zoom:50%;" />
+![1591256494829](../media/pictures/Docker.assets/1591256494829.png)
 
 而且开始下载的镜像很大，他需要下载基本的一些base层的一些东西，后续下载其他的会越来越快，因为base层是共用的。
 
@@ -861,7 +857,7 @@ docker build -f /home/docker/Dockerfile -t sunshine/centos .
 
 实际操作：
 
-<img src="../media/pictures/Docker.assets/1591345479423.png" alt="1591345479423" style="zoom:50%;" />
+![1591345479423](../media/pictures/Docker.assets/1591345479423.png)
 
 
 
@@ -1256,11 +1252,11 @@ cd /u01/app/oracle/product/11.2.0/xe/network/admin#
 
 ![image-20200814094917014](../media/pictures/Docker.assets/image-20200814094917014.png)
 
-<img src="../media/pictures/Docker.assets/image-20200814094734059.png" alt="image-20200814094734059" style="zoom:50%;" />
+![image-20200814094734059](../media/pictures/Docker.assets/image-20200814094734059.png)
 
 
 
-<img src="../media/pictures/Docker.assets/image-20200814095043556.png" alt="image-20200814095043556" style="zoom:50%;" />
+![image-20200814095043556](../media/pictures/Docker.assets/image-20200814095043556.png)
 
 
 

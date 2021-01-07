@@ -323,6 +323,39 @@ System.out.println(new Double(3.5).shortValue());
 
 
 
+将Double转换为long（亲测有效）
+
+```java
+@Test
+	public void test6(){
+		Double d = 11.91;
+		Long l = Math.round(d);  //首先四舍五入 去掉小数后位数
+		
+		String str = String.valueOf(l);
+		System.out.println(str);
+		
+		Long ll = Long.parseLong(str);
+		System.out.println(ll);
+	}
+	
+	@Test
+	public void test7(){
+		Double d = 11.91;
+		
+		String str = String.valueOf(d);  //首先转换为string类型
+		System.out.println(str);
+		 
+		Long ll = new Double(str).longValue(); //然后将str转换为double类型，再用Double的方法，将其转换为long类型
+		System.out.println(ll);
+	}
+```
+
+
+
+
+
+
+
 # Time
 
 ## LocalDateTime
@@ -1710,7 +1743,9 @@ HttpResponse result = HttpRequest.post(path)
 
 
 
-Fastjson 将Json转换为Object：绵阳扫码支付这里（获取预支付结果）
+## Fastjson 将Json转换为Object
+
+绵阳扫码支付这里（获取预支付结果）
 
 ```java
 String str = "{\"respCode\":\"0000000000\",\"respMsg\":\"交易成功		\",\"recordCount\":null,\"reqSeqNo\":null,\"token\":\"https://mail.scrcu.com:82/payweb/merCodeReceive?qrCode=https://qr.95516.com/00010000/01462410577035304057810240124827\",\"respTime\":\"20201030111618\",\"respSsn\":\"20103011160015186927\"}";
@@ -2930,7 +2965,7 @@ ${spring-boot.version}:${spring-boot.formatted-version}
 
 ```
 
-```java
+```
 ${AnsiColor.BRIGHT_YELLOW}
                    ${AnsiColor.BRIGHT_RED}_ooOoo_${AnsiColor.BRIGHT_WHITE}
                   ${AnsiColor.BRIGHT_RED}o8888888o${AnsiColor.BRIGHT_WHITE}
@@ -2989,9 +3024,11 @@ ${AnsiColor.BRIGHT_RED}
 
 
 
+注释生成：
 
+http://patorjk.com/software/taag/#p=testall&f=Graffiti&t=mianyang	
 
-
+http://www.network-science.de/ascii/
 
 
 

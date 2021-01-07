@@ -32,7 +32,7 @@ Activiti5是由Alfresco软件在2010年5月17日发布的业务流程管理（BP
 
 流程图：
 
-![1594909179566](../media/pictures/Activiti.assets/1594909179566.png)
+<img src="../media/pictures/Activiti.assets/1594909179566.png" alt="1594909179566" style="zoom: 67%;" />
 
 
 
@@ -507,7 +507,7 @@ Activiti用这个对象去描述流程执行的每一个节点。在没有并发
 
 如图为ProcessInstance的源代码，
 
-![1595466745495](../media/pictures/Activiti.assets/1595466745495.png)
+<img src="../media/pictures/Activiti.assets/1595466745495.png" alt="1595466745495" style="zoom: 50%;" />
 
 从源代码中可以看出ProcessInstance就是Execution。但在现实意义上有所区别， 
 
@@ -527,7 +527,7 @@ Activiti用这个对象去描述流程执行的每一个节点。在没有并发
 
 #### 对流程定义，流程实例，执行的理解
 
-![1595469108871](../media/pictures/Activiti.assets/1595469108871.png)
+<img src="../media/pictures/Activiti.assets/1595469108871.png" alt="1595469108871" style="zoom:50%;" />
 
 流程定义就是上面的流程，流程图有了以后，流程定义数据就有啦。
 
@@ -535,7 +535,7 @@ Activiti用这个对象去描述流程执行的每一个节点。在没有并发
 
 execution对象，用来描述流程执行的每一个节点。
 
-![1595469668481](../media/pictures/Activiti.assets/1595469668481.png)
+<img src="../media/pictures/Activiti.assets/1595469668481.png" alt="1595469668481" style="zoom:50%;" />
 
 同一个instance实例，如果有多个分支，就叫execution，不同的execution。
 
@@ -553,25 +553,25 @@ https://www.activiti.org/designer/update/
 
 ### 画流程图
 
-![image-20200924100913207](../media/pictures/Activiti.assets/image-20200924100913207.png)
+<img src="../media/pictures/Activiti.assets/image-20200924100913207.png" alt="image-20200924100913207" style="zoom:50%;" />
 
 #### 设置属性
 
 在画完流程图以后，需要填写属性，就需要找到这个菜单
 
-![image-20200924100704844](../media/pictures/Activiti.assets/image-20200924100704844.png)
+<img src="../media/pictures/Activiti.assets/image-20200924100704844.png" alt="image-20200924100704844" style="zoom: 33%;" />
 
 
 
 #### 设置任务办理人
 
-![image-20200924101407976](../media/pictures/Activiti.assets/image-20200924101407976.png)
+<img src="../media/pictures/Activiti.assets/image-20200924101407976.png" alt="image-20200924101407976" style="zoom:50%;" />
 
 
 
 #### 修改流程id和name
 
-![image-20200924101455935](../media/pictures/Activiti.assets/image-20200924101455935.png)
+<img src="../media/pictures/Activiti.assets/image-20200924101455935.png" alt="image-20200924101455935" style="zoom:50%;" />
 
 
 
@@ -583,11 +583,11 @@ https://www.activiti.org/designer/update/
 
 原因是Idea设置编码少设置一个utf-8，这几个地方都设置了才可以。
 
-![image-20200924171414374](../media/pictures/Activiti.assets/image-20200924171414374.png)
+<img src="../media/pictures/Activiti.assets/image-20200924171414374.png" alt="image-20200924171414374" style="zoom: 33%;" />
 
 这种方式只对当前文件项目有作用。想让对新项目有作用，需要下面这种设置
 
-![image-20200925173430538](../media/pictures/Activiti.assets/image-20200925173430538.png)
+<img src="../media/pictures/Activiti.assets/image-20200925173430538.png" alt="image-20200925173430538" style="zoom:33%;" />
 
 ##### 一些表的名称功能
 
@@ -715,7 +715,7 @@ act_ge_bytearray 、act_re_deployment、act_re_procdef
 
 ### 流程图
 
-![image-20200925154442377](../media/pictures/Activiti.assets/image-20200925154442377.png)
+<img src="../media/pictures/Activiti.assets/image-20200925154442377.png" alt="image-20200925154442377" style="zoom:50%;" />
 
 ### 部署流程两种方式
 
@@ -921,7 +921,7 @@ public void deleteProcessDefinition() {
 
 修改流程图之后重新部署，只要key不变，它的版本号就会+1。
 
-![image-20200928171856581](../media/pictures/Activiti.assets/image-20200928171856581.png)
+<img src="../media/pictures/Activiti.assets/image-20200928171856581.png" alt="image-20200928171856581" style="zoom:50%;" />
 
 
 

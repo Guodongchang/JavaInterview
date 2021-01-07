@@ -336,7 +336,7 @@ git log 查看提交日，这里面会有一些提交日志
 
 可以上下翻页来看
 
-<img src="../media/pictures/Git.assets/1590985524131.png" alt="1590985524131" style="zoom: 50%;" />
+![1590985524131](../media/pictures/Git.assets/1590985524131.png)
 
 然后复制对应的版本号
 
@@ -392,7 +392,7 @@ https://blog.csdn.net/asoar/article/details/84111841?utm_medium=distribute.pc_re
 
 ## Idea中配置git的terminal
 
-<img src="../media/pictures/Git.assets/a15b1912d084d0f9e95bac45b2050b04.png" style="zoom: 67%;" />
+![](../media/pictures/Git.assets/a15b1912d084d0f9e95bac45b2050b04.png)
 
 
 
@@ -557,3 +557,62 @@ git官网下载：https://git-scm.com/download/win  （特别慢！！）
 git安装包 阿里镜像，下载速度超快。
 
 网址：https://npm.taobao.org/mirrors/git-for-windows/
+
+
+
+
+
+
+
+# Interview
+
+Git代码被覆盖了怎么办？
+
+用户的特征信息？
+
+你们的git的开发模式是怎样的？是怎么管理不同的功能？
+
+有两个不同的需求，你们是怎么处理git的？
+
+你们团队中如果一个人提交错了，你们后面是怎么处理的
+
+代码管理工具是什么？git用过没？你写了三四天代码然后push，冲突，你把别人代码覆盖了怎么解决？回答：回退，问：那你自己代码不要了？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
