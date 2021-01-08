@@ -49,12 +49,12 @@
   * [Java8新特性](./docs/JavaSE.md)
   * [集合数据结构](./docs/Collection.md)
   * [NIO](./docs/NIO.md)
-* 计算机基础
+* 计算机基础 （重要）
 
-  * [计算机组成原理](./docs/PrincipleOfComputerComposition.md)
-  * [操作系统](./docs/OS.md)
-  * [数据结构](./docs/DataStructure.md)  需要完善
-  * [计算机网络](./docs/NetWork.md)  需要完善
+  * [计算机组成原理 ](./docs/PrincipleOfComputerComposition.md)  需要完善
+  * [操作系统](./docs/OS.md)  需要完善
+  * [数据结构](./docs/DataStructure.md)   需要完善
+  * [计算机网络](./docs/NetWork.md)   需要完善
 * 数据库
   - [Mysql](./docs/Mysql.md)  需要完善
   - [Oracle](./docs/Oracle.md) 

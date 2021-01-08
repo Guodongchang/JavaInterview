@@ -4,17 +4,31 @@
 
 
 
-## 计算机操作系统概述
+> 这一部分知识，学习主要参考王道考研视频操作系统，王道考研教材；
+>
+> 下面一些图片来自于视频截图，是笔者在学习过程中的记录。
+>
+> 这一部分还没有完结，后续会继续更新。
+
+
+
+>学习进度 看到视频第二个 五分钟
+
+## 计算机操作系统概述 
 
 ### 操作系统的基本概念
 
 #### 概念
 
-![image-20201123211755406](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123211755406.png)
+![image-20210108093311375](../media/pictures/OS.assets/image-20210108093311375.png)
+
+
 
 #### 特征
 
-![image-20201123212424765](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123212424765.png)
+![image-20210108112053279](../media/pictures/OS.assets/image-20210108112053279.png)
+
+
 
 ##### 并发
 
@@ -24,7 +38,7 @@
 
 ##### 共享
 
-![image-20201123213341006](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123213341006.png)
+![image-20210108112115809](../media/pictures/OS.assets/image-20210108112115809.png)
 
 
 
@@ -36,13 +50,17 @@
 
 问题？
 
-![image-20201123211826566](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123211826566.png)
+![image-20210108112140625](../media/pictures/OS.assets/image-20210108112140625.png)
 
-![image-20201123211602407](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123211602407.png)
+![image-20210108112207799](../media/pictures/OS.assets/image-20210108112207799.png)
+
+
 
 #### 重点回顾
 
-![image-20201123212151980](C:%5CUsers%5CSunshine%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20201123212151980.png)
+![image-20210108112238233](../media/pictures/OS.assets/image-20210108112238233.png)
+
+
 
 后面章节要学习的重点就是中间：资源管理者这一部分里面的内容。
 
@@ -56,10 +74,6 @@
 
 
 
-看到视频第二个 五分钟。
-
-
-
 # Interview
 
-文件管理
+文件管理相关问的多

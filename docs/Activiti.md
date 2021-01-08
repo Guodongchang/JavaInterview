@@ -1,5 +1,17 @@
 # Activiti
 
+工作流
+
+> 我们公司用工作流很多，公司OA系统，一些政府项目系统，都是用的工作流。
+>
+> 画流程图还是推荐eclipse，IDEA实在不好画。
+
+
+
+> 下面是在学习过程中一些笔记，未完待续。
+>
+> 学习进度 第62。
+
 Activiti项目是一项新的基于Apache许可的开源BPM平台,工作流在银行系统，政务系统，办公系统，物流系统，财务系统，电力系统等都有非常广泛的应用
 
 ## 生活中的工作流
@@ -1006,139 +1018,24 @@ public void viewProcessImg2() {
 
 ### 附加功能：查询最新版本流程定义
 
-62
-
-
-
-
-
 
 
 ### 附加功能：删除流程定义（删除key相同的所有不同版本的流程定义）
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Project Activiti
-
-流程管理-流程部署  是比较基本的  这里有的话，
-
-系统管理，流程人员配置， 
-
-![1589793272794](../media/pictures/Activiti.assets/1589793272794.png)
-
-
+# 其他资料
 
 简单来说以前的商城项目，那些订单状态，一个完成以后，进行下一个，其实也是一种简单的工作流。
 
-只是现在成都自来水里面的工作流很复杂。
-
-所以要用Activity。
+只是现在公司里面的工作流很复杂，所以要用Activity。
 
 
 
-参考： https://www.cnblogs.com/cx-code/p/9143657.html 
+其他文章参考： https://www.cnblogs.com/cx-code/p/9143657.html 
 
 https://blog.csdn.net/qq_39459412/article/details/80427236
 
 https://blog.csdn.net/yerenyuan_pku/article/details/71307305?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.nonecase
 
 https://blog.csdn.net/zbdxcyg/article/details/78519773?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.nonecase
-
-```
-
-```
-

@@ -1,5 +1,13 @@
 # Drools
 
+规则引擎
+
+> 这一部分学习的时候是看的黑马博学谷的学习视频。下面笔记也是随堂笔记。
+>
+> 笔者放在这里是为了方便观看，如有侵权，请联系删除。
+
+
+
 注意：SpringBoot版本和Drools版本直接的兼容问题。
 
 Maven仓库：
@@ -10,7 +18,7 @@ SpringBoot： https://mvnrepository.com/artifact/org.springframework.boot/spring
 
 学习的视频是18年的，用的SpringBoot是2.0.x  对应的Drools用的7.6.x
 
-公司成都自来水项目17年开始 SpringBoot 1.4.5 对应的Drools应该是7.0.x
+公司项目17年开始 SpringBoot 1.4.5 对应的Drools应该是7.0.x
 
 ## 1. 问题引出
 

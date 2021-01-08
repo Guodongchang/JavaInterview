@@ -1,5 +1,11 @@
 # Books
 
+
+
+> 读书笔记来源于《代码整洁之道》，刚参加工作的小白，如果想提升代码质量可以看看这本书。
+>
+> 后续会持续更新后续章节。
+
 # CleanCode
 
 《代码整洁之道》 读书笔记
@@ -331,15 +337,7 @@ Circle makeCircle(Point center,double radius);
 
  
 
-
-
 ## 第四章 注释
-
-
-
-
-
-
 
 
 
@@ -347,37 +345,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第六章 对象和数据结构
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -385,45 +353,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第八章 边界
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -431,47 +361,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第十章 类
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -479,45 +369,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第十二章 迭代 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -525,45 +377,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第十四章 逐步改进
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -571,45 +385,7 @@ Circle makeCircle(Point center,double radius);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 第十六章 重构SerialDate
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
