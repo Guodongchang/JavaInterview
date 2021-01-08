@@ -76,7 +76,6 @@
   - [Maven](./docs/Maven.md)
   - [Mybatis](./docs/Mybatis.md)
   - [JWT](./docs/JWT.md)
-  - [Netty](./docs/Netty.md)  后续需要增加进来
   - [Nginx](./docs/Nginx.md)
   - [Shiro](./docs/Shiro.md)  小系统可以用这个权限校验，我们公司专门有一个一体化管理服务，进行角色管理。复杂系统，就不能用这个啦。
   - [Zookeeper](./docs/Zookeeper.md)
@@ -96,8 +95,6 @@
 
 - 计算机使用技巧
   - [计算机使用技巧](./docs/ComputerSkills.md)  系统使用技巧，常用插件，开发软件安装，快捷键，博客，Dos Order
-- 测试运维
-  - [一体化部署Jenkins](./docs/Jenkins.md)   后续更新
 - 需要学习的新知识
   - [新知识](./docs/NewKnowledge.md) 
 - 面试相关

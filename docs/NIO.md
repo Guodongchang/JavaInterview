@@ -635,8 +635,6 @@ SelectableChannle 的结构如下图：
 
 
 
-
-
 ## 管道(Pipe)
 
 
@@ -646,6 +644,10 @@ SelectableChannle 的结构如下图：
 ## Java NIO2 (Path、Paths 与 Files )
 
 
+
+# Netty
+
+> 后续会加进来。
 
 
 
