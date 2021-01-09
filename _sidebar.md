@@ -34,7 +34,6 @@
   - [Maven](./docs/Maven.md)
   - [Mybatis](./docs/Mybatis.md)
   - [JWT](./docs/JWT.md)
-  - [Netty](./docs/Netty.md)  
   - [Nginx](./docs/Nginx.md)
   - [Shiro](./docs/Shiro.md) 
   - [Zookeeper](./docs/Zookeeper.md)
@@ -54,8 +53,6 @@
 
 - 计算机使用技巧
   - [计算机使用技巧](./docs/ComputerSkills.md) 
-- 测试运维
-  - [一体化部署Jenkins](./docs/Jenkins.md)  
 - 需要学习的新知识
   - [新知识](./docs/NewKnowledge.md) 
 - 面试相关
