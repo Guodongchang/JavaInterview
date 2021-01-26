@@ -1,14 +1,16 @@
 # Zookeeper
 
-JavaGuide 下面
-
-```java
-D:\Code\Github\JavaGuide\docs\system-design\framework
-```
-
 zookeeper  愿意是动物园管理员。
 
 
+
+> 这里有些参考guide哥文章，JavaGuide 
+>
+> 还有很多不完善 后续自己会完善。
+
+
+
+# Interview
 
 ## 1.zookeeper内部用的是什么算法
 

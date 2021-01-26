@@ -3,11 +3,11 @@
 运行shell脚本
 
 ```shell
-二次供水脚本: 
+second supply 脚本: 
  ./run restart
 run 脚本文件（shell文件）
 
-自来水：
+cd-water 项目脚本：
 sh shell.sh
 ```
 

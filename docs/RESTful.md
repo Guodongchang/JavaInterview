@@ -1,5 +1,9 @@
 # RESTful
 
+
+
+> 这篇文章是参考guide哥的文章，当时面试时候碰到相关内容，所以记录了下来。
+
 ### 一、重要概念
 
 REST,即 **REpresentational State Transfer** 的缩写。这个词组的翻译过来就是"表现层状态转化"。这样理解起来甚是晦涩，实际上 REST 的全称是 **Resource Representational State Transfe** ，直白地翻译过来就是 **“资源”在网络传输中以某种“表现形式”进行“状态转移”** 。如果还是不能继续理解，请继续往下看，相信下面的讲解一定能让你理解到底啥是 REST 。

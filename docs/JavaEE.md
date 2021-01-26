@@ -1,5 +1,9 @@
 # JavaEE
 
+
+
+> 这里内容是自己学习笔记
+
 # HTTP&Tomcat
 
 ## HTTP
@@ -24,17 +28,17 @@ HTTP/0.9 HTTP/1.0 HTTP/1.1 HTTP/2（google） HTTP/3（google）
 
 ### HTTP请求报文
 
-http请求过程，以访问www.cskaoyan.com为例。
+http请求过程，随便访问www.baidu.com为例。
 
 服务端会返回一个响应，响应的内容是一个html页面。浏览器拿到html页面，会对html进行解析，发现如果还需要css样式文件，js文件，图片资源等，浏览器会自行再发送http请求，去请求相关的资源。
 
-![1596156529671](../media/pictures/JavaEE.assets/1596156529671.png)
+![image-20210126161128198](../media/pictures/JavaEE.assets/image-20210126161128198.png)
 
 
 
 完整的http请求报文：
 
-![](../media/pictures/JavaEE.assets/4f6e491badd8c8f056b7f58e8097ce5f.png)
+![image-20210126161410194](../media/pictures/JavaEE.assets/image-20210126161410194.png)
 
 #### 请求行
 

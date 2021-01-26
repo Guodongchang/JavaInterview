@@ -1,40 +1,24 @@
 # Oracle
 
+## 目录
+
+[TOC]
+
+> 这一部分内容我忘记了参考的文章。 有些是我写的，有很多不是我写的。当时看到觉得很好，就保存下来了。方便后续查阅。
+
 ## Oracle和Mysql区别
 
-![image-20200814101957056](../media/pictures/Oracle.assets/image-20200814101957056.png)
+<img src="../media/pictures/Oracle.assets/image-20200814101957056.png" alt="image-20200814101957056" style="zoom: 33%;" />
 
-![image-20200814102008896](../media/pictures/Oracle.assets/image-20200814102008896.png)
+<img src="../media/pictures/Oracle.assets/image-20200814102008896.png" alt="image-20200814102008896" style="zoom:33%;" />
+
+Oracle的结构和PostgreSql 很像，公司用PostgreSql很多。好多资料上也是这个数据库，除了Mysql以外算是用的也挺多的一个数据库。
+
+
 
 ## navicat创建Oracle表
 
 参考 https://www.cnblogs.com/sugarwxx/p/12696852.html
-
-
-
-
-
-
-
-select 1 和 select * 区别：
-
-https://www.cnblogs.com/sharpest/p/11106504.html
-
-
-
-in 和 exists 
-
-
-
-
-
-学习网站：https://www.bilibili.com/video/BV17b411V75B?p=2
-
-Oracle 数据库-sql plsql - Java 学习 - 尚硅谷
-
-
-
-[TOC]
 
 
 
@@ -2159,3 +2143,18 @@ where salary > (
 
 
 
+# Interview
+
+select 1 和 select * 区别：
+
+https://www.cnblogs.com/sharpest/p/11106504.html
+
+
+
+in 和 exists 
+
+
+
+学习网站：https://www.bilibili.com/video/BV17b411V75B?p=2
+
+Oracle 数据库-sql plsql - Java 学习 - 尚硅谷
