@@ -2,6 +2,8 @@
 
 ## 目录
 
+<!-- TOC -->
+
 [TOC]
 
 > 这一部分内容我忘记了参考的文章。 有些是我写的，有很多不是我写的。当时看到觉得很好，就保存下来了。方便后续查阅。
@@ -2139,7 +2141,38 @@ where salary > (
 
 ----
 
-----
+
+
+
+
+# SQL 常用
+
+```sql
+-- if else 版的sql
+-- case when then else end  
+
+SELECT
+    report.id as installId,
+    report.install_no as installNo,
+    report.unit_name as projectName,
+    report.water_address as unitAddress,
+    report.business_environment_project as businessEnvironmentProject,
+    report.del_flag,
+    design.job_number as jobNamber,
+    contract.create_at as signDate,
+    budget.money as money,
+    (CASE WHEN report.business_environment_project = '0' THEN contract.breaks_money ELSE budget.breaks_money END) breaksMoney
+from t_install_report_record report
+LEFT JOIN t_process_design design on report.id = design.install_id and design.del_flag = 0
+LEFT JOIN t_biz_contract contract on report.id = contract.install_id and contract.del_flag = 0
+LEFT JOIN t_process_budget budget on report.id = budget.install_id and budget.del_flag = 0
+```
+
+参考：https://blog.csdn.net/konglongaa/article/details/80250253
+
+https://blog.csdn.net/xuxurui007/article/details/8479953?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-2.control
+
+
 
 
 
