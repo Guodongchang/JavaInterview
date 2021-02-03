@@ -1,5 +1,9 @@
 # Docker
 
+
+
+> 这里是自己在B站看阳哥视频学习的这一部分内容。
+
 ## **Bilibili**
 
 阳哥说啦，学习慢就是快，一步一步来。这个月多学一个本事，下个月少说一句求人的话。
@@ -1252,11 +1256,11 @@ cd /u01/app/oracle/product/11.2.0/xe/network/admin#
 
 ![image-20200814094917014](../media/pictures/Docker.assets/image-20200814094917014.png)
 
-![image-20200814094734059](../media/pictures/Docker.assets/image-20200814094734059.png)
+<img src="../media/pictures/Docker.assets/image-20200814094734059.png" alt="image-20200814094734059" style="zoom:50%;" />
 
 
 
-![image-20200814095043556](../media/pictures/Docker.assets/image-20200814095043556.png)
+![image-20210203181618939](../media/pictures/Docker.assets/image-20210203181618939.png)
 
 
 
