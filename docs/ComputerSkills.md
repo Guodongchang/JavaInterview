@@ -1297,6 +1297,36 @@ HY086-4T01N-CZ3U0-CV0QM-13DNU
 
 
 
+## Ditto
+
+粘贴板  
+
+网址：https://ditto-cp.sourceforge.io/
+
+![image-20210202110515614](../media/pictures/ComputerSkills.assets/image-20210202110515614.png)
+
+
+
+## PowerToys
+
+Wins工具集
+
+下载地方 GitHub https://github.com/microsoft/PowerToys 
+
+参考文章 程序羊 https://mp.weixin.qq.com/s/LUPa_uSEd91Pj08VwxsxEQ
+
+
+
+
+
+## Wins工具 CodeSheep推荐
+
+https://mp.weixin.qq.com/s/LUPa_uSEd91Pj08VwxsxEQ
+
+
+
+
+
 # XShell连接
 
 当连接不上虚拟机的Linux的时候，可能是没有关闭Linux的防火墙，或者连接ip错误。

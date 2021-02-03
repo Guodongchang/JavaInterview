@@ -1,12 +1,11 @@
-# MySql
+MySql
 
 ## 目录
 
 [TOC]
 
-> 常用Sql命令，参考自guide文章中推荐的一位小伙伴写的
+> 常用Sql命令，原文地址：https://shockerli.net/post/1000-line-mysql-note/
 >
-> 下面 那些内容是自己学习笔记。
 
 ## 常用Sql命令
 
@@ -1016,18 +1015,6 @@ ifnull(null, a),ifnull(a,b),   ifnull里有两个数，如果第一个不是null
 
 # 一:Mysql 基础
 
-## 什么是数据库？
-
-存储和管理数据的仓库。
-
-存储的途径：内存（不能持久化，读取速度非常快），文件（可以持久化）
-
-数据库（持久化保存机制）相较于文件有什么优点：不仅仅可以存储数据，还可以管理数据。
-
-![](../media/pictures/MySql.assets/03a6916cd8cd98a10ca7fa279d0a66fb.png)
-
-数据库的概念可以类比excel软件来记忆，excel软件打开之后，会有一个一个sheet，每一个sheet里面是表格，表格存放的就是我们所需要的数据，而数据库可以类比为excel软件，数据库里面存放了一个一个的表，表里面存放的就是我们的数据。
-
 ## 数据库分类
 
 ### 关系型数据库
@@ -1038,381 +1025,489 @@ ifnull(null, a),ifnull(a,b),   ifnull里有两个数，如果第一个不是null
 
 运行在内存中的map
 
-## 数据库安装
 
-![](../media/pictures/MySql.assets/241ef6fe96f32e4e6494539bfba9ab03.png)
-
-配置环境变量MYSQL_HOME
-
-## 使用mysql
-
-登录进入mysql mysql -u root -p
-
-![](../media/pictures/MySql.assets/547e7ccdd0cb0ce6fcd204fb5fc138f0.png)
-
-## 数据库和SQL之间的关系
-
-通用的一种语言，可以与多种数据库进行交互。
-
-SQL的全称：Structured/standard Query
-Language。就是一种规范语言，可以用来与绝大多数的数据库进行通讯。
-
-数据库定义了一个规范，通过使用一些关键词组成的英语语句(select \* from
-表名)来表示数据库的每一项功能。这个我们称之为SQL。SQL的话可以理解为一种通用性的语言，无论使用Mysql还是Oracle，绝大多数的操作语句都是相同的。但是还是会存在一些细微的差距，这里面我们称之为方言。
-
-SQL就是用一些关键字组成的英语语句表示某一项功能，sql的作用就是用来和数据库进行沟通、通信。标准的sql语句可以类比我们的普通话，但是每个数据库可能支持不同的方言，这个时候，mysql里面的方言放到oracle里面就不能正常执行。
-limit offset mysql方言。
 
 ## SQL操作
 
-### 数据库
+### 数据库相关
 
-#### 创建数据Show databases;可以用来查看当前mysql中的数据库。
+Mysql 不区分大小写。
 
-Mysql不区分大小写，但是一般使用大小表示该单词是mysql中的一个关键字。
+```sql
+-- MySql
+Show databases
 
-![](../media/pictures/MySql.assets/38ad0ded7f98bbe6bb6cf6b43794e97a.png)
+--Oracle、PostgreSql 没有这个
 
-![](../media/pictures/MySql.assets/492f45e795ea2c57f06be24b7a34177c.png)
+--创建数据库
+create database mydb;
 
-![](../media/pictures/MySql.assets/fd422deba7cdc77e63ecf426a9d1e334.png)
+--创建数据库并设置字符 utf8
+create database mydb2 character set utf8;
 
-A character set is a set of symbols and encodings. A collation is a set of rules
-for comparing characters in a character set
+--创建数据库，并判断（如果不存在再创建）
+create database if not exists mydb3;
+
+--字符集 不区分大小写
+create database mydb1 character set utf8 collate utf8_general_ci;
+
+--字符集 区分大小写
+create database mydb1 character set utf8 collate utf8_bin;
+```
 
 
 
-auth_socket
+```sql
+--使用数据库
+use mydb;
 
-如果要对数字进行排序，升序或者降序。
+--创建表
+create table t_order (name carchar(2));
 
-但是如果要对字符进行排序，升序或者降序，它采用什么规则？？？校对规则。
+--插入几条数据
+insert into t_order values ('a')
+insert into t_order values ('b')
+insert into t_order values ('A')
+insert into t_order values ('B')
 
-![](../media/pictures/MySql.assets/81d3cee12c9385f4f3e804035d4b2145.png)
+--查询数据 如果创建数据库是字符集一种是区分大小写，一种是不区分大小写，查询结果不一样
+select * from t_order order by name asc;
 
-字符集。Collation就是在一个字符集内如何对字符进行排序的一种规则。比如对于数字来说，升序或者降序排序，没有疑问。但是如果对一个字符name，进行升序或者降序排序，应该怎么排，那这个规则就是collation。
+--结果 utf8_general_ci
+A
+a
+B
+b
 
-![](../media/pictures/MySql.assets/c8365456c36d0ce6889cd2d6ddfad447.png)
+--结果 utf8_bin
+A
+B
+a
+b
 
-![](../media/pictures/MySql.assets/6b7fb4c716ac27f8cccb24a839fe4989.png)
+--结果 不指定字符集
+a
+A
+b
+B
 
-首先新建表，之后在表内插入几条数据。
 
-![](../media/pictures/MySql.assets/a29338e0b550fed11395ebe2c80d9248.png)
 
-![](../media/pictures/MySql.assets/2ab264a452c6fe89cbd796d4035f72c9.png)
+--删除数据库
+drop database mydb1;
 
-![](../media/pictures/MySql.assets/9329957adb10d5b47b0e31c752263610.png)
+--修改数据库
+alter database mydb2 character set utf8;
+```
 
-![](../media/pictures/MySql.assets/97db00d3c8f24717e0d4f55b6e270355.png)
 
-![](../media/pictures/MySql.assets/95e19f3098a9494f9b75324b7912d2fa.png)
-
-If not exists 表示在没有的情况下创建，有则不会创建。
-
-![](../media/pictures/MySql.assets/2e54dda2299c7db7d9e8de3afec4c38d.png)
-
-显示数据库创建语句。
-
-![](../media/pictures/MySql.assets/4b82ad1089ae8b4e728f6fe88d1d0ae6.png)
-
-#### 显示数据库、显示数据库创建语句
-
-Show databases show create database db_name;
-
-#### 删除数据库
-
-![](../media/pictures/MySql.assets/f023a87c91c2d7fafebfce9022ab6793.png)
-
-#### 修改数据库
-
-![](../media/pictures/MySql.assets/943e5dcb0e1e8312cfaef08aa2950e29.png)
 
 ### 表
 
-![](../media/pictures/MySql.assets/dde66b010b8d372f18daf58f6dbb7c66.png)
+```sql
+--使用数据库 在操作表之前一定要先选择数据库
+use mydb2;
 
-在操作表之前一定要先选择数据库。
+--显示表 显示所有表
+show tables;
 
-#### 显示表
+--显示具体表
+desc t_order;
 
-Show tables; desc 表名;
 
-![](../media/pictures/MySql.assets/770fa5f1544198562248f7e3147d9a8f.png)
+```
 
-![](../media/pictures/MySql.assets/04cb95e1902f8dc67bf6f4c08c0c6f01.png)
+
 
 #### 创建表
 
-需要注意一下\`\`，表示的含义？？？正常情况下，该符号可以写，可以不写，在什么情况下一定要写呢？？？？
+```sql
+--什么情况下符号 `` 一定要写？ 关键字一定要加 ``   
 
-![](../media/pictures/MySql.assets/a0b0388ae8b3a08d002fbb7ba6cb4995.png)
+--创建表 这里order是表名
+create table `order`(id int);
 
-![](../media/pictures/MySql.assets/925baa34e2dde53afd2ef99de70c7211.png)
+--展示表结构
+show create table `order`;
+
+--自己测试Mysql activiti是数据库，后面是表
+show create table activiti.ACT_EVT_LOG;
+```
+
+
+
+##### 整型
+
+```sql
+create table int_test(name1 tinyint, name2 smallint, name3 int);
+```
+
+
 
 ##### 浮点型
 
-![](../media/pictures/MySql.assets/5bc20ce8ec7eb7b32b4522f6d74f9d82.png)
+```sql
+--正确的浮点数插入
+insert into float_test calues(1234.567, 1234.567)
 
-其中DECIMAL需要特别注意，float，double在存储数据的时
+--错误的浮点数插入 第一个数字太大啦
+insert into float_test calues(12345.678, 1234.567)
 
-候会有精度丢失，如果想保障绝对的精度，可以使用DECIMAL，内部使用字符串来存储。  
+--其中DECIMAL需要特别注意，float，double在存储数据的时候会有精度丢失，如果想保障绝对的精度，可以使用DECIMAL，内部使用字符串来存储。  
+```
 
-![](../media/pictures/MySql.assets/a4dbf4ede592c865597b561a32cde6d6.png)
+
 
 ##### 日期型
 
-![](../media/pictures/MySql.assets/523c187b8aebf455e9757bae2929dd73.png)
+```sql
+--当前时区 偏移10小时
+set time_zone = `+10:00`
 
-Datetime与时区无关，timestamp与时区有关，时区变化，相应的时间数据会发生变化。
+--Datetime与时区无关，timestamp与时区有关，时区变化，相应的时间数据会发生变化。
+--插入时间 当前时间
+insert into time_test (t1) values(now())
 
-![](../media/pictures/MySql.assets/2a80aa4ed271edb404b731c79e029be3.png)
+--如果时间类型是datetime，默认是null，timestamp默认值是当前时间，而且还与时区有关。
+```
 
-日期型，建议：在创建表的时候，都设置一个字段用来保存操作的具体时间。
+
 
 ##### 字符类型
 
-Varchar（M） char（M）区别：
+> Varchar（M） char（M）区别：
 
-Char表示固定长度，即创建表的时候，指定多大，那就占多大空间
+- Char表示固定长度，即创建表的时候，指定多大，那就占多大空间
+- Varchar表示不定长，创建表的时候，指定的大小为该字段所能容纳的最大空间，具体占用多大空间和存储的数据有关。
 
-Varchar表示不定长，创建表的时候，指定的大小为该字段所能容纳的最大空间，具体占用多大空间和存储的数据有关。
+```sql
+--前面固定长度 后面变长
+create table char_test(name1 char(5), name2 varchar(5));
 
-![](../media/pictures/MySql.assets/cf8a2e4ac0263a01469ae795e7bc027d.png)
+--Enmu类和Set类型
+--Enum类可以理解为从备选中任选其一。Set类型可以理解为从备选项中选择一个或者多个，但是不能是备选项之外的。 
+create table enum_test(
+name1 enum('male','femal','unknown'),
+name2 set('java','c','python')
+);
 
-![](../media/pictures/MySql.assets/8c564c6af9f9d67167e48d7945a88c04.png)
+--会执行错误
+insert into enmu_test values('a','b') 
+insert into enmu_test values('male','b') 
+insert into enmu_test values('male,gemale','java') 
+insert into enmu_test values('male','java,c,python,kk') 
 
-Enum类可以理解为从备选中任选其一。Set类型可以理解为从备选项中选择一个或者多个，但是不能是备选项之外的。  
+--执行正确
+insert into enmu_test values('male','java') 
+insert into enmu_test values('male','java,c') 
+insert into enmu_test values('male','java,c,python') 
+```
 
-![](../media/pictures/MySql.assets/e7f988b7e33307f96aed2bba9ef1d073.png)
+
 
 ##### 二进制类型
 
 数据库可以存放二进制，但是基本不会有人在数据库里面存放二进制，为什么？比如可以存放图片，音频，视频，但是存放在数据库里十分占用空间，而且也不是很便利，直接将资源保存在相应的服务器硬盘中，之后将本地地址保存在数据库内即可。比如每个人可以上传用户头像，如何将头像与每个用户关联起来。
 
-![](../media/pictures/MySql.assets/9cc40e227d8811685e04b094ca4dee27.png)
 
-![](../media/pictures/MySql.assets/1ab40c04276caa832800d3c2f0178a90.png)
-
-![](../media/pictures/MySql.assets/067b3129c08cca59853e91f502d9f2d5.png)
-
-创建表无论表名还是字段名称，如果里面包含mysql中的关键字，则无法创建成功，这个时候，如果想用该字段，则可以用\`
-\`符号（在数字1旁边）将当前字段名称括起来。
 
 #### 修改表
 
-##### 增加新列
+```sql
+--增加新列
+alter table stuff and image varchar(300), add province varchar(20);
 
-![](../media/pictures/MySql.assets/62bc72c19a34354e55f3edb542abb80e.png)
+--修改列字段类型
+alter table stuff modify job varchar(60)
 
-##### 修改列字段类型
+--删除某列
+alter table stuff drop image;
 
-![](../media/pictures/MySql.assets/b8014c0a8a275ea32aad7a7edda5c167.png)
+--修改表名
+rename table stuff to user;
 
-##### 删除某列
+--修改表字符集
+alter table user character set gbk;
 
-![](../media/pictures/MySql.assets/19579d1aa674fedcf248b8d5aa2e94d9.png)
+--修改表某列的名称
+alter table user character set gbk;
 
-##### 修改表名
+--修改表的默认值
+alter table stuff modify salary double default 0;
+alter table stuff change salary salary salary double default 0;
+alter tavle stuff change salary salary double default 0,change gender gender varchar(10) default 'male';
+```
 
-![](../media/pictures/MySql.assets/dd1ae3f8a0ce80676588efece6b2e2c9.png)
 
-##### 修改表的字符集
 
-![](../media/pictures/MySql.assets/680e97f0758a5708448c7b1753358fbd.png)
+其中需要注意change和modify的区别:
 
-##### 修改表某列的名称
+- Change语法： change col_name new_col_name datatype
 
-![](../media/pictures/MySql.assets/96028d45dc201bc000e3dd4eee4449a2.png)
+- Modify语法： modify column datatype
 
-其中需要注意change和modify的区别
+- Change既可以修改列的名称，也可以修改列的字段类型
 
-Change语法： change col_name new_col_name datatype
+- Modify只可以,修改列的字段类型。
 
-Modify语法： modify column datatype
 
-Change既可以修改列的名称，也可以修改列的字段类型
+- Modify和change都可以修改表的默认值。
 
-Modify只可以,修改列的字段类型。
 
-##### 修改表的默认值
-
-![](../media/pictures/MySql.assets/8b992cbff7244888dc3c7448e969ffe8.png)
-
-![](../media/pictures/MySql.assets/d454f654a8e2fa239f1d14dd964c9c56.png)
-
-Modify和change都可以修改表的默认值。
 
 #### 删除表
 
-Drop table 表名;
+```sql
+drop table user;
+```
 
-![](../media/pictures/MySql.assets/1403e8642196da68f20db0c2bb284134.png)
+
 
 ### 表内数据
 
-#### 新增数据
 
-![](../media/pictures/MySql.assets/e0e23a35fcc174209e4bcf4823f2544b.png)
 
-表名之后没有带列名，则需要将所有的数据都给填充，且数据类型要与定义的表结构一致。
+#### 新增、修改、删除
 
-或者可以指定相应的列名，单独赋值。
+```sql
+--新增数据
+insert into stuff values (1,'zhangsan','male','1995-10-1 12:20:21','2021-10-1 12:20:21',‘java’,12000,'')
 
-![](../media/pictures/MySql.assets/ddb0c73892c8933a79ce351bd39ae167.png)
+--表名之后没有带列名，则需要将所有的数据都给填充，且数据类型要与定义的表结构一致。或者可以指定相应的列名，单独赋值。
 
-表名后面没有跟字段名称，则意味着全部字段都将被赋值，所以，values后面的数值不仅数量要一一对应，数据类型也应该一一对应。
+--如果上面的有八个字段，如果写成下面这样会报错
+--表名后面没有跟字段名称，则意味着全部字段都将被赋值，所以，values后面的数值不仅数量要一一对应，数据类型也应该一一对应。
+insert into stuff values (1,'zhangsan')
 
-![](../media/pictures/MySql.assets/b53cfdeba58972a8cba9ab1f7d9d1cc9.png)
 
-默认填充数据来自于default。
 
-#### 修改数据
 
-![](../media/pictures/MySql.assets/b900882243b1a6543fc2e63de8af9c48.png)
 
-![](../media/pictures/MySql.assets/e9088b92f1db1eeb6d43f93d8e37f0e4.png)
+--修改字段
+update sruff set salary = 5000;
+update stuff set salary = 3000 where name = 'zhangsan'
+update stuff set salary = 3000,job = 'ccc' where name = 'lisi'
 
-![](../media/pictures/MySql.assets/47f558da26da8c9f440b8d4349b1059e.png)
+insert into stuff (id,name,gender,salary) values (3,"sunshine",'male',10000)
+update stuff set salary = salary + 10000 where name = 'steve'
 
-#### 删除数据
 
-![](../media/pictures/MySql.assets/bb997f1889fb83cff6fcc145c42da53a.png)
+--删除数据  工作这种用的少 大多数都有更新删除标志 del_flag，并不会真正物理上的删除，只会逻辑上的删除
+delete from stuff where id = 1;
 
-#### 查询数据
+```
 
-![](../media/pictures/MySql.assets/c66ac7b323c5fd99de0bb9d6ebd0a954.png)
 
-![](../media/pictures/MySql.assets/be4b94610d75c00fbf3ed8d4b39bad5c.png)
 
-![](../media/pictures/MySql.assets/859d0fe8edb990bc4a53bf6522e6684a.png)
+#### 查询数据 重点
 
-![](../media/pictures/MySql.assets/c54ae902b9dd1f52cf25f699e2c71dca.png)
+（工作大多数都是干这个事情）
 
-##### 运算符：
+```sql
+--注意实际工作中 select 后面不写*， 这样会导致不能命中索引，要写出具体字段名称。
 
-![](../media/pictures/MySql.assets/cb11e1a8dc1f0ad1e6641e941ba8913d.png)
+--一般查询数据 
+select * from student;
+select * from student where (chinese + english + math) > 180;
+select name from student where math > 80 and math <= 90; 
+selsct * from student where class = 'class4'
 
-![](../media/pictures/MySql.assets/ad73a638cb22d79a4bb33da3829d41de.png)
 
-![](../media/pictures/MySql.assets/134ebfacb2b5f19d2cf189ca46938c44.png)
+--运算符 
+--不等于null
+select * from student where english <=> null;
+select * from student where english is not null;
 
-Like：模糊查询 % \_
+--等于null
+select * from student english is null;
 
-![](../media/pictures/MySql.assets/ecc901e27477b77c3b738b7d4c572fec.png)
+--between
+select * from student where math between 80 and 90;
 
-%：匹配一个，多个或者没有。只要包含所要查询的内容，即可匹配到
+--in
+select * from student where class in ('class1','class2')
+ 
+--like   在SQL优化的时候经常会问一个问题，下面哪一种可以命中索引？前导模糊不能命中索引（字符前面有% 索引不能命中）
+select * from t_student where name like '%阳光%'
+select * from t_student where name like '阳光%'
+select * from t_student where name like '%阳光'
 
-\_：表示仅匹配一个字符
+-- -只匹配一个字符
+select * from t_student where name like '_阳_';
+```
 
-![](../media/pictures/MySql.assets/b545b5de744010e37416903a07eb5ef9.png)
+**通配符 % \_分别代表什么意思：**
 
-![](../media/pictures/MySql.assets/9cb568ac6531f0e31760c6c3ffd8fc27.png)
+- %：匹配一个，多个或者没有。只要包含所要查询的内容，即可匹配到
+- \_：表示仅匹配一个字符
 
-![](../media/pictures/MySql.assets/fdd6de801860d57026d2d45ef27afea5.png)
 
-##### 通配符 % \_分别代表什么意思：
 
-%表示匹配任意个
 
-\_表示仅匹配一个字符。
+```sql
+--去重 distinct
+select distinct class from student;
+select distinct chinese from student;
 
-Distinct：
+--某个网站做了一个登录统计的表，用户每次登录App，都会留下一条记录，现在该网站想统计一下日活（一天之内多少人登录）。
+create table login(
+id int,
+user_id varchar(200),
+login_time datetime,
+device carchar(20)
+);
 
-![](../media/pictures/MySql.assets/aaa6de9b0ed7613912d6acad06e86bc9.png)
+insert into login values (1, '0001',now(),'ios');
+insert into login values (2, '0001',now(),'android');
+insert into login values (3, '0001',now(),'web');
+insert into login values (4, '0002',now(),'ios');
+insert into login values (5, '0002',now(),'ios');
 
-##### 去重
+select distinct user_id from login where login_time > '2021-01-01 10:10:10' and login_time < '2021-01-02 10:10:10';
 
-某个网站做了一个登录统计的表，用户每次登录App，都会留下一条记录，现在该网站想统计一下日活（一天之内多少人登录）。
 
-![](../media/pictures/MySql.assets/f4dedbafaec22e4fd6aa59b2c8689136.png)
 
-##### 限制结果：分页
 
-![](../media/pictures/MySql.assets/29caba86735b3650f30a629969294350.png)
+--限制结果 分页 
+--显示三条记录，偏移设置为2 
+--第一种用法
+select * from t_students limit 3 offset 2;
 
-第一种用法：
+--第二种用法 显示三条记录，偏移量是1
+select * from t_student limit 1,3
 
-![](../media/pictures/MySql.assets/26089cff353e1c0123ce2a45efcdfe98.png)
 
-第二种用法：
 
-![](../media/pictures/MySql.assets/301f8402b10ae352cc86fe5b4e107e2f.png)
+--Order by：排序
+--正序排列
+select * from student order by math asc;
 
-![](../media/pictures/MySql.assets/23f237781e913a20d7d17e004501a19c.png)
+--逆序排列
+select * from student order by math desc;
 
-分页结果sql语句部分代码。
+--多列排序
+--首先按照第一列的要求进行排序，第一列排序完之后再细微调整第二列，也就是优先级由高到低的过程。
+select * from srudent order by math,chinese,english;
 
-##### Order by：排序
+--首先保障第一列的排序，之后第二列，最后第三列。
+select * from student order by math desc,chinese desc,english desc;
 
-![](../media/pictures/MySql.assets/989faddc9388d4c9ef2fd5c27b2498dd.png)
+--总分逆序排列
+select * from student order by (chinese + english + math) desc;
 
-![](../media/pictures/MySql.assets/b308b28a152b308e57987beb4a7827aa.png)
+--总分逆序前三名
+select * from student order by (chinese + english + math) desc limit 3 offset 0;
 
-多列排序：
+--显示 姓名，总分，并且按照总分逆序排列
+select name，Chinese + english + math as total from student order by total desc;
 
-![](../media/pictures/MySql.assets/33680d54531fd9be2a665cbd54b858b5.png)
 
-首先按照第一列的要求进行排序，第一列排序完之后再细微调整第二列，也就是优先级由高到低的过程。
 
-![](../media/pictures/MySql.assets/f015fe04c87ffce9f1ece30eee1cc9d1.png)
 
-首先保障第一列的排序，之后第二列，最后第三列。
+--聚合函数 count在计算的时候会忽略值为null的行
+select count(id) from t_studnets;
+select count(chinese) from t_students;
 
-![](../media/pictures/MySql.assets/d4756c5d6c5c068e45e7a9f4158e17c4.png)
+select name,(chinese + english + math) as total, (chinese + english + math)/3 as avg from student;
 
-##### 聚合函数
+select avg(chinese) as avg_chinese, avg(math) as avg_math, avg(english) as avg_english from student;
 
-![](../media/pictures/MySql.assets/619acac6dd6411a50debddd123f00f05.png)
 
-![](../media/pictures/MySql.assets/bb51cf3e289e25f22a81e88a4eb2ad2f.png)
 
-![](../media/pictures/MySql.assets/96ea925ec34f3ef513e654b018adcc33.png)
 
-##### 分组
+--分组 group by
+--聚合函数和group by 分组一起使用的时候，聚合函数会对每一个分组进行单独计算。
+select count(id),class as count from t_students group by class;
+--结果
+count(id) count
+6          一班
+1          三班
+2          二班
+1		   五班
+1          四班
 
-聚合函数和group by 分组一起使用的时候，聚合函数会对每一个分组进行单独计算。
+--having 给分组添加筛选条件 （where 只能给单行筛选）
+select count(id) as number,class as count from t_student group by class having number > 2;
+--结果
+count(id) count
+6          一班
 
-![](../media/pictures/MySql.assets/e3f6cede4cd4073c4a2bebfef4490c0e.png)
+--当你在使用group by之后，再单独查询某个字段没有任何意义（除了group by该字段）
+select count(id) as number,class,name from t_student group by class;
+--结果
+number class   name
+6		一班    东邪
+1       三班    南帝
+2       二班    西毒
+1       五班    中神通
+1       四班    北丐
 
-计算出每个班级的人数之后，如果想知道每个班级有哪些学生，应该怎么得到？？？
+select count(id),as number,class,group_concat(name) from t_student group by class;
+--结果
+number class   name
+6		一班    东邪，郭靖，黄蓉，梅超风，小黄，小黄鸭
+1       三班    南帝
+2       二班    西毒，黄药师
+1       五班    中神通
+1       四班    北丐
 
-当你在使用group by之后，再单独查询某个字段没有任何意义（除了group by该字段），
+--上面这个mysql可以执行，在Oracle中必须用下面这个才可以执行
+select count(id) as number from student group by chass;
+select count(id) as number, class from student group by class;
 
-![](../media/pictures/MySql.assets/df540ca0cb763df664955f85b8324437.png)
 
-![](../media/pictures/MySql.assets/7dcdb7d6f71decd931f235726113b1e6.png)
+-- 需求 首先添加一个条件，仅选出各科成绩都及格的学生，之后，对学生进行分组，统计各个班级的人数。
+select class,count(id) as number,group_coucat(name) from t_student where chinese > 60 and english > 60 and math > 60 group by class having number >1;
+--结果
+class number   name
+一班	   2      东邪，黄蓉，
+二班     2      西毒，黄药师
 
-![](../media/pictures/MySql.assets/93445037b7cb6b512f9db99035a1b760.png)
+select class,count(id) as number,group_coucat(name) from t_student where chinese > 60 and english > 60 and math > 60 group by class ;
+--结果
+class number   name
+一班	   2      东邪，黄蓉，
+三班	   1	  南帝
+二班     2      西毒，黄药师
+五班     1      中神通
 
-###### Having 和where？？？
+--子查询分组
+select 
+count(a.id) as number,
+a.class 
+from (select 
+      * 
+      from student where chinese >= 60 and english >= 60 and math >=60) a 
+group by class having number > 2;
 
-Where语句在分组之前，执行完where语句再去对数据进行分组
+--sql执行顺序
+select class,count(id) as number from student group by class having number < 10 order by number desc;
+```
 
-Having语句在分组之后，执行完分组之后，再对分组数据进行一个过滤筛选。
 
-首先添加一个条件，仅选出各科成绩都及格的学生，之后，对学生进行分组，统计各个班级的人数。
 
-![](../media/pictures/MySql.assets/ef3858153a4bd2cc497461da0e7f9b84.png)
+##### Having 和where区别
 
-select count(a.id) as number,a.class from(select \* from student where chinese
-\>= 60 and english \>= 60 and math \>=60) a
+- Where语句在分组之前，执行完where语句再去对数据进行分组
 
-group by class having number \> 2;
+- Having语句在分组之后，执行完分组之后，再对分组数据进行一个过滤筛选。
 
-![](../media/pictures/MySql.assets/dde207b24b16f38175f5e3baf25b9ba1.png)
 
-![](../media/pictures/MySql.assets/078a95b5a1cf042de355613c324ea498.png)
 
-![](../media/pictures/MySql.assets/993f608ca55712b6967fe0df6bee210b.png)
-
-![](../media/pictures/MySql.assets/ad41da72ba118494433e5083027270bb.png)
-
-##### Select语句执行顺序
-
-![](../media/pictures/MySql.assets/54fb6ef4c292f627d94a41b7b78b632c.png)
+##### Select语句执行顺序 （重要）
 
 从上到下是写sql语句时正确的语法结构，括号里面的数字代表该条sql语句在服务器内部执行的先后顺序。
+
+```
+(5)select column_name,...
+(1)from table_name,...
+(2)where ...
+(3)group by ...
+(4)having ...
+(6)order by ...  
+```
+
+
 
 ### 数据完整性
 
@@ -1420,67 +1515,69 @@ group by class having number \> 2;
 
 ##### 主键约束
 
-主键可以理解为用来标识数据库内每一条数据。比如，如果有一个学生表，班级里有多位同学都叫李明，这个时候如何区分每一位同学？？？
+主键可以理解为用来标识数据库内每一条数据。比如，如果有一个学生表，班级里有多位同学都叫李明，这个时候如何区分每一位同学？
 
-新建主键：
 
-新建表的时候创建：
 
-![](../media/pictures/MySql.assets/29a95f948d1cd62b082821c96ab0191d.png)
+```sql
+--新建表的时候创建 新建主键
+create table t_user (id int primary key, name varchar(20));
 
-修改表创建主键：
+--修改表 如果原来没有主键 则创建主键 
+alter table t_user modify id int primary key;
 
-![](../media/pictures/MySql.assets/6129d1f9dd6dde5f8d16a72d42128357.png)
+--查看表信息
+desc t_user;
 
-删除主键：
+--删除主键：
+alter table table_name drop primary key;
 
-Alter table table_name drop primary key.
+--Mysql专属 设置主键，并且同时自增    Oracle和PgSql是通过序列来实现自增的
+alter table student modify id int primary key auto_increment;
 
-一般通过主键来保障。
+--创建表的时候 创建主键
+create table stu(
+	id int primary key auto_increament,
+    name varchar(20)
+)
 
-![](../media/pictures/MySql.assets/2a0f0c0082f2183b132488c1651ad3e2.png)
+--修改主键自增
+alter table t_user modify id int auto increment;
 
-删除主键：
+```
 
-![](../media/pictures/MySql.assets/954cb3de1dba3eead69725c9a3e0f591.png)
 
-另外一种新建主键的方式：在新建表的时候创建
-
-![](../media/pictures/MySql.assets/22a3fb36f67ff2484beb98680d0c6c4f.png)
-
-主键自增长：
-
-![](../media/pictures/MySql.assets/9ed05e76a1bef524841ebfb1ac21746d.png)
-
-![](../media/pictures/MySql.assets/693489ef06926f171a0d996bd483c2af.png)
-
-![](../media/pictures/MySql.assets/4786c70c3d3de8a08c435b2d28567348.png)
-
-![](../media/pictures/MySql.assets/e5ec2686e99acb4618d76b117b4be716.png)
-
-设置约束类型为unique，不可以插入相同的数据，但是可以插入null。
 
 ##### Unique
 
-唯一性约束。用户注册的时候选择手机号或者邮箱。
+```sql
+--unique约束   设置约束类型为unique，不可以插入相同的数据，但是可以插入null
+alter table stu add email varchar(50) unique;
+--在插入数据的时候 邮箱不能重复
 
-![](../media/pictures/MySql.assets/ccb46a6d108411a16005a48e1b0efc7d.png)
+--删除唯一性约束
+alter table t_user drop index email;
+
+
+```
+
+注意：
 
 唯一性约束，可以同时插入多个null数据。
 
-删除唯一性约束：
 
-![](../media/pictures/MySql.assets/2b63cc7c4242b50abcb6edc90f1870e6.png)
 
 ##### Not null
 
-Not null
+```sql
+alter table t_user modify name varchar(20) not null;
 
-两种方式：
 
-第二种在新建完表之后，手动添加。
+--删除非空约束
+alter table t_user modify name varchar(20);
+```
 
-![](../media/pictures/MySql.assets/529ebc5e03a449d18efe443fe6e4cbb3.png)
+
 
 删除非空约束：
 
