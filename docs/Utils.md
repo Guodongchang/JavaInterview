@@ -1,147 +1,199 @@
-# Utils
+Utils
+
+
+
+> 这一部分内容是一些比较碎的知识，有常用工具类，
+
+## 目录
+
+[TOC]
+
+
 
 # BigDecimal
 
-### BigDecimal的加减乘除运算:
+## 为什么要用这个？
 
-前阵子做题遇到了大数的精确计算，再次认识了bigdecimal
-关于Bigdecimal意外的有许多小知识点和坑，这里特此整理一下为方便以后学习，希望能帮助到其他的萌新
+既然要处理小数用 double 不可以吗，为什么要用这个？
 
-BigDecimal的运算——加减乘除
-首先是bigdecimal的初始化
+
+
+**个人理解：**
+
+- 不用double是因为在计算类似金额等要求精度非常高的数据是，double不精确。
+
+- 由于我已经工作了一段时间了，对实际企业开发有了一些理解，我以前做过一个交易所项目，里面有很多钱的交易，有金额，冻结金额等等很多，工程款，缴纳金额，欠费金额等，每一分钱都不能少，所以需要一个精度很高的类型来记录金额。
+
+
+
+> 参考：https://www.cnblogs.com/zhangyinhua/p/11545305.html
+>
+> https://blog.csdn.net/haiyinshushe/article/details/82721234
+
+## Bigdecimal 初始化
+
+**推荐用字符串初始化**
+
 这里对比了两种形式，第一种直接value写数字的值，第二种用string来表示
 
 ```java
-    BigDecimal num1 = new BigDecimal(0.005);
-    BigDecimal num2 = new BigDecimal(1000000);
-    BigDecimal num3 = new BigDecimal(-1000000);
-    //尽量用字符串的形式初始化
-    BigDecimal num12 = new BigDecimal("0.005");
-    BigDecimal num22 = new BigDecimal("1000000");
-    BigDecimal num32 = new BigDecimal("-1000000");
+BigDecimal num1 = new BigDecimal(0.005);
+BigDecimal num2 = new BigDecimal(1000000);
+BigDecimal num3 = new BigDecimal(-1000000);
+//尽量用字符串的形式初始化
+BigDecimal num12 = new BigDecimal("0.005");
+BigDecimal num22 = new BigDecimal("1000000");
+BigDecimal num32 = new BigDecimal("-1000000");
 ```
 
+## BigDecimal的加减乘除运算:
+
+
+
 我们对其进行加减乘除绝对值的运算
-
-其实就是Bigdecimal的类的一些调用
-
-加法 add()函数     减法subtract()函数
-乘法multiply()函数    除法divide()函数    绝对值abs()函数
 我这里承接上面初始化Bigdecimal分别用string和数进行运算对比
 
 ```java
-    //加法
-    BigDecimal result1 = num1.add(num2);
-    BigDecimal result12 = num12.add(num22);
- 
-    //减法
-    BigDecimal result2 = num1.subtract(num2);
-    BigDecimal result22 = num12.subtract(num22);
- 
-    //乘法
-    BigDecimal result3 = num1.multiply(num2);
-    BigDecimal result32 = num12.multiply(num22);
- 
-    //绝对值
-    BigDecimal result4 = num3.abs();
-    BigDecimal result42 = num32.abs();
- 
-    //除法
-    BigDecimal result5 = num2.divide(num1,20,BigDecimal.ROUND_HALF_UP);
-    BigDecimal result52 = num22.divide(num12,20,BigDecimal.ROUND_HALF_UP);
+//加法
+BigDecimal result1 = num1.add(num2);
+BigDecimal result12 = num12.add(num22);
+
+//减法
+BigDecimal result2 = num1.subtract(num2);
+BigDecimal result22 = num12.subtract(num22);
+
+//乘法
+BigDecimal result3 = num1.multiply(num2);
+BigDecimal result32 = num12.multiply(num22);
+
+//绝对值
+BigDecimal result4 = num3.abs();
+BigDecimal result42 = num32.abs();
+
+//除法
+BigDecimal result5 = num2.divide(num1,20,BigDecimal.ROUND_HALF_UP);
+BigDecimal result52 = num22.divide(num12,20,BigDecimal.ROUND_HALF_UP);
 ```
 
-我把result全部输出可以看到结果
-
-这里出现了差异，这也是为什么初始化建议使用string的原因
 
 
+从上到下分别输出：
 
-#### ※ 注意：
+```java
+加法用value结果：1000000.005000000000000000104083408558608425664715468883514404296875
+加法用string结果：1000000.005
+
+减法value结果：-999999.994999999999999999895916591441391574335284531116485595703125
+减法用string结果：-999999.995
+
+乘法用value结果：5000.000000000000104083408558608425664715468883514404296875000000
+乘法用string结果：5000.000
+
+绝对值用value结果：1000000
+绝对值用string结果：1000000
+
+除法用value结果：199999999.99999999583666365766
+除法用string结果：200000000.00000000000000000000
+```
+
+
+
+这里出现了差异，这也是为什么初始化建议使用string的原因。
+
+
+
+### 注意
 
 1）System.out.println()中的数字默认是double类型的，double类型小数计算不精准。
 
 2）使用BigDecimal类构造方法传入double类型时，计算的结果也是不精确的！
 
+
+
 因为不是所有的浮点数都能够被精确的表示成一个double 类型值，有些浮点数值不能够被精确的表示成 double 类型值，因此它会被表示成与它最接近的 double 类型的值。必须改用传入String的构造方法。这一点在BigDecimal类的构造方法注释中有说明。
 
 完整的test代码如下：
 
+```java
 import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class TestThree {
+	public static void main(String[] args) {
+ 
+        BigDecimal num1 = new BigDecimal(0.005);
+        BigDecimal num2 = new BigDecimal(1000000);
+        BigDecimal num3 = new BigDecimal(-1000000);
+        //尽量用字符串的形式初始化
+        BigDecimal num12 = new BigDecimal("0.005");
+        BigDecimal num22 = new BigDecimal("1000000");
+        BigDecimal num32 = new BigDecimal("-1000000");
 
-```java
-public static void main(String[] args) {
- 
-    BigDecimal num1 = new BigDecimal(0.005);
-    BigDecimal num2 = new BigDecimal(1000000);
-    BigDecimal num3 = new BigDecimal(-1000000);
-    //尽量用字符串的形式初始化
-    BigDecimal num12 = new BigDecimal("0.005");
-    BigDecimal num22 = new BigDecimal("1000000");
-    BigDecimal num32 = new BigDecimal("-1000000");
- 
-    //加法
-    BigDecimal result1 = num1.add(num2);
-    BigDecimal result12 = num12.add(num22);
-    //减法
-    BigDecimal result2 = num1.subtract(num2);
-    BigDecimal result22 = num12.subtract(num22);
-    //乘法
-    BigDecimal result3 = num1.multiply(num2);
-    BigDecimal result32 = num12.multiply(num22);
-    //绝对值
-    BigDecimal result4 = num3.abs();
-    BigDecimal result42 = num32.abs();
-    //除法
-    BigDecimal result5 = num2.divide(num1,20,BigDecimal.ROUND_HALF_UP);
-    BigDecimal result52 = num22.divide(num12,20,BigDecimal.ROUND_HALF_UP);
- 
-    System.out.println("加法用value结果："+result1);
-    System.out.println("加法用string结果："+result12);
- 
-    System.out.println("减法value结果："+result2);
-    System.out.println("减法用string结果："+result22);
- 
-    System.out.println("乘法用value结果："+result3);
-    System.out.println("乘法用string结果："+result32);
- 
-    System.out.println("绝对值用value结果："+result4);
-    System.out.println("绝对值用string结果："+result42);
- 
-    System.out.println("除法用value结果："+result5);
-    System.out.println("除法用string结果："+result52);
+        //加法
+        BigDecimal result1 = num1.add(num2);
+        BigDecimal result12 = num12.add(num22);
+        //减法
+        BigDecimal result2 = num1.subtract(num2);
+        BigDecimal result22 = num12.subtract(num22);
+        //乘法
+        BigDecimal result3 = num1.multiply(num2);
+        BigDecimal result32 = num12.multiply(num22);
+        //绝对值
+        BigDecimal result4 = num3.abs();
+        BigDecimal result42 = num32.abs();
+        //除法
+        BigDecimal result5 = num2.divide(num1,20,BigDecimal.ROUND_HALF_UP);
+        BigDecimal result52 = num22.divide(num12,20,BigDecimal.ROUND_HALF_UP);
+
+        System.out.println("加法用value结果："+result1);
+        System.out.println("加法用string结果："+result12);
+
+        System.out.println("减法value结果："+result2);
+        System.out.println("减法用string结果："+result22);
+
+        System.out.println("乘法用value结果："+result3);
+        System.out.println("乘法用string结果："+result32);
+
+        System.out.println("绝对值用value结果："+result4);
+        System.out.println("绝对值用string结果："+result42);
+
+        System.out.println("除法用value结果："+result5);
+        System.out.println("除法用string结果："+result52);
+	}
 }
 ```
 
-}
-除法divide()参数使用
+
+
+### 乘法 
+
+#### 保留两位小数
+
+```java
+//价税合计金额=金额+金额*税率  这里填负数（且保留两位小数） 这里不用计算啦 保存之前计算过啦
+BigDecimal bigDecimal = new BigDecimal("65.4067");
+
+BigDecimal bigDecimal2 = bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP);
+System.out.println(bigDecimal2);
+		
+```
+
+
+
+### 除法
+
+**除法divide() 参数使用：**
+
 使用除法函数在divide的时候要设置各种参数，要精确的小数位数和舍入模式，不然会出现报错
 
 我们可以看到divide函数配置的参数如下
 
-
-
-即为 （BigDecimal divisor 除数， int scale 精确小数位，  int roundingMode 舍入模式）
-可以看到舍入模式有很多种BigDecimal.ROUND_XXXX_XXX, 具体都是什么意思呢
+**即为 （BigDecimal divisor 除数， int scale 精确小数位，  int roundingMode 舍入模式）**
+可以看到舍入模式有很多种BigDecimal.ROUND_XXXX_XXX, 具体都是什么意思呢？
 
 
 
 计算1÷3的结果（最后一种ROUND_UNNECESSARY在结果为无限小数的情况下会报错）
-
-
-
-#### 乘法 保留两位小数
-
-```java
-价税合计金额=金额+金额*税率  这里填负数（且保留两位小数） 这里不用计算啦 保存之前计算过啦
-BigDecimal bigDecimal = new BigDecimal("65.4067");
-		BigDecimal bigDecimal2 = bigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP);
-		System.out.println(bigDecimal2);
-		
-```
 
 
 
@@ -223,7 +275,7 @@ BigDecimal bigDecimal = new BigDecimal("65.4067");
 
 
 
-#### BigDecimal转换成int
+## BigDecimal转换成int
 
 ```java
 BigDecimal b=new BigDecimal(45.45);
@@ -233,7 +285,7 @@ int a = b.intValue();
 
 
 
-#### BigDecima比较大小:
+## BigDecima比较大小
 
 ```java
 BigDecimal a = new BigDecimal (101);
@@ -264,11 +316,11 @@ if(a.compareTo(b) < 1){
 
 
 
-#### BigDecima 判断知否为0
+## BigDecima 判断是否为0
 
-1.我之前用来判断Bigdecimal类型是否等于0的方法
+**1.我之前用来判断Bigdecimal类型是否等于0的方法**
 
-```
+```java
 equals(BigDecimal.ZERO)
 ```
 
@@ -276,24 +328,31 @@ equals(BigDecimal.ZERO)
 
 
 
-2.上面方法存在的问题
+**2.上面方法存在的问题**
+
 有一天，调用这个这句代码的时候，传入的确实是0，但却返回false
+
 查看源代码发现：
 
-Bigdecimal的equals方法不仅仅比较值的大小是否相等，首先比较的是scale（scale是bigdecimal的保留小数点位数，比如 new Bigdecimal("1.001"),scale为3），也就是说，不但值得大小要相等，保留位数也要相等，equals才能返回true。
+Bigdecimal的equals方法不仅仅比较值的大小是否相等，首先比较的是scale（scale是bigdecimal的保留小数点位数，比如 new 
+
+Bigdecimal("1.001"),scale为3），也就是说，不但值得大小要相等，保留位数也要相等，equals才能返回true。
+
 Bigdecimal b = new Bigdecimal("0") 和 Bigdecimal c = new Bigdecimal("0.0"),用equals比较，返回就是false。
+
 Bigdecimal.ZERO的scale为0。
+
 所以，用equals方法要注意这一点。
 
 
 
-3.用b.compareTo(BigDecimal.ZERO)==0，可以比较是否等于0，返回true则等于0，返回false，则不等于0
+**3.用b.compareTo(BigDecimal.ZERO)==0，可以比较是否等于0，返回true则等于0，返回false，则不等于0**
 
 
 
-# 各种类型相互转换
+# 各种基本类型相互转换
 
-### short 转换为Integer
+## Short 转换为Integer
 
 ```java
 Integer number = Integer.valueOf(orderGoods.getNumber());
@@ -301,7 +360,7 @@ Integer number = Integer.valueOf(orderGoods.getNumber());
 
 
 
-### double转换为long，int，float，byte，short
+## Double转换为long，int，float，byte，short
 
 ```java
 System.out.println(new Double(3.5).longValue());
@@ -323,31 +382,31 @@ System.out.println(new Double(3.5).shortValue());
 
 
 
-将Double转换为long（亲测有效）
+## 将Double转换为long（亲测有效）
 
 ```java
 @Test
-	public void test6(){
-		Double d = 11.91;
-		Long l = Math.round(d);  //首先四舍五入 去掉小数后位数
-		
-		String str = String.valueOf(l);
-		System.out.println(str);
-		
-		Long ll = Long.parseLong(str);
-		System.out.println(ll);
-	}
-	
-	@Test
-	public void test7(){
-		Double d = 11.91;
-		
-		String str = String.valueOf(d);  //首先转换为string类型
-		System.out.println(str);
-		 
-		Long ll = new Double(str).longValue(); //然后将str转换为double类型，再用Double的方法，将其转换为long类型
-		System.out.println(ll);
-	}
+public void test6(){
+    Double d = 11.91;
+    Long l = Math.round(d);  //首先四舍五入 去掉小数后位数
+
+    String str = String.valueOf(l);
+    System.out.println(str);
+
+    Long ll = Long.parseLong(str);
+    System.out.println(ll);
+}
+
+@Test
+public void test7(){
+    Double d = 11.91;
+
+    String str = String.valueOf(d);  //首先转换为string类型
+    System.out.println(str);
+
+    Long ll = new Double(str).longValue(); //然后将str转换为double类型，再用Double的方法，将其转换为long类型
+    System.out.println(ll);
+}
 ```
 
 
@@ -356,13 +415,11 @@ System.out.println(new Double(3.5).shortValue());
 
 
 
-# Time
+# 时间类相关
 
 ## LocalDateTime
 
-### 商城项目目前用的是这个当前时间:
-
-### LocalDateTime.now() 
+商城项目目前用的是这个当前时间:
 
 ```
 orderGoods.setAddTime(LocalDateTime.now());
@@ -381,10 +438,6 @@ https://blog.csdn.net/wsywb111/article/details/86543637
 ### 时间戳和日期转换:
 
 ```java
-Java时间戳与日期格式字符串的互转
-上代码:
-
-复制代码
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -448,7 +501,7 @@ public class DateUtil {
 
 
 
-pgsql 需要根据时间段查创建时间是否在这个范围内：
+Pgsql 需要根据时间段查创建时间是否在这个范围内：
 
 ```xml
 //济宁报装这么写的
@@ -547,8 +600,6 @@ public class DateTest {
 
 
 
-
-
 ## 用时间年月日时分秒生成id
 
 ```java
@@ -564,29 +615,23 @@ https://www.cnblogs.com/zhengchenhui/p/6076442.html
 
 
 
-
-
-
-
-
-
-
-
-# 日志logger
+# 日志相关
 
 ```java
 private final Log logger = LogFactory.getLog(OrderJob.class);
 
-ogger.info("系统开启定时任务检查订单是否已经超期自动确认收货");
+logger.info("系统开启定时任务检查订单是否已经超期自动确认收货");
 ```
 
 
 
-如果不想每次写代码的时候都写**private  final Logger logger = LoggerFactory.getLogger(当前类名.class); 可以用注解@Slf4j;**
+如果不想每次写代码的时候都写下面这句，**可以用注解@Slf4j;**
 
-这个注解是lombok里面的注解，是可以少写一些代码。
+```java
+private  final Logger logger = LoggerFactory.getLogger(当前类名.class); 
+```
 
-用这个 还需要在idea里面装lombok插件。
+这个注解是lombok里面的注解，是可以少写一些代码。用这个 还需要在idea里面装lombok插件。
 
 导入依赖
 
@@ -619,35 +664,41 @@ public class PaymentController {
 }
 ```
 
-
-
 参考：https://www.jianshu.com/p/6e137ee836a1
 
 
 
-
-
-
-
-# 数据库
+# 数据库相关
 
 ## bean 数据库和bean不对应
 
+```java
+@TableField(exist = false)   //注解 
 ```
-@TableField(exist = false)  
+
+
+
+## 数据库加锁
+
+修改订单状态 加锁 乐观锁 避免  同时请求 修改数据库错误
+
+```java
+order.setOrderStatus(OrderUtil.STATUS_REFUND);
+if (orderService.updateWithOptimisticLocker(order) == 0) {
+    return ResponseUtil.updatedDateExpired();
+}
+
 ```
 
 
 
+# 加密相关
 
-
-# MD5
+## MD5
 
 ```java
 String pwd = SecureUtil.md5( StrUtil.addSuffixIfNot( password, AppConst.PASSWORD_ENCRYPTION));
 ```
-
-
 
 
 
@@ -683,24 +734,6 @@ Object mobileRegistered = AuthUtils.checkMobileRegistered(litemallUser,mobile);
 if (mobileRegistered != null) {
     return mobileRegistered;
 }
-
-
-```
-
-
-
-
-
-
-
-修改订单状态 加锁 乐观锁 避免  同时请求 修改数据库错误
-
-```java
-order.setOrderStatus(OrderUtil.STATUS_REFUND);
-if (orderService.updateWithOptimisticLocker(order) == 0) {
-    return ResponseUtil.updatedDateExpired();
-}
-
 ```
 
 
@@ -737,9 +770,7 @@ user.setPassword(SecureUtil.md5(StrUtil.addSuffixIfNot(dto.getPassword(), BizCon
 
 # Lombok
 
-idea中插件lombok
-
-这个插件也没安装上!
+idea中需要安装插件lombok
 
 ## 1 Lombok背景介绍
 
@@ -752,7 +783,7 @@ Project Lombok makes java a spicier language by adding 'handlers' that know how 
 
 大致意思是Lombok通过增加一些“处理程序”，可以让java变得简洁、快速。
 
-2 Lombok使用方法
+## 2 Lombok使用方法
 
 Lombok能以简单的注解形式来简化java代码，提高开发人员的开发效率。例如开发中经常需要写的javabean，都需要花时间去添加相应的getter/setter，也许还要去写构造器、equals等方法，而且需要维护，当属性多时会出现大量的getter/setter方法，这些显得很冗长也没有太多技术含量，一旦修改属性，就容易出现忘记修改对应方法的失误。
 
@@ -780,10 +811,8 @@ Lombok的使用跟引用jar包一样，可以在官网（https://projectlombok.o
 
 官方实例如下：
 
-[![复制代码](../media/pictures/Utils.assets/copycode.gif)](javascript:void(0);)
-
-```
- import lombok.AccessLevel;
+```java
+import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.Data;
 import lombok.ToString;
@@ -802,17 +831,12 @@ public class DataExample {
     private final T value;
   }
 }
-
 ```
-
-[![复制代码](D:/Code/Typora/media/pictures/Utils.assets/copycode.gif)](javascript:void(0);)
 
 如不使用Lombok，则实现如下：
 
-[![复制代码](../media/pictures/Utils.assets/copycode.gif)](javascript:void(0);)
-
-```
- import java.util.Arrays;
+```java
+import java.util.Arrays;
 
 public class DataExample {
   private final String name;
@@ -852,7 +876,8 @@ public class DataExample {
     this.tags = tags;
   }
   
-  @Override public String toString() {
+  	@Override 
+    public String toString() {
     return "DataExample(" + this.getName() + ", " + this.getAge() + ", " + this.getScore() + ", " + Arrays.deepToString(this.getTags()) + ")";
   }
   
@@ -860,7 +885,8 @@ public class DataExample {
     return other instanceof DataExample;
   }
   
-  @Override public boolean equals(Object o) {
+  	@Override 
+    public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof DataExample)) return false;
     DataExample other = (DataExample) o;
@@ -872,7 +898,8 @@ public class DataExample {
     return true;
   }
   
-  @Override public int hashCode() {
+  	@Override 
+    public int hashCode() {
     final int PRIME = 59;
     int result = 1;
     final long temp1 = Double.doubleToLongBits(this.getScore());
@@ -912,7 +939,8 @@ public class DataExample {
       return other instanceof Exercise;
     }
     
-    @Override public boolean equals(Object o) {
+   	 @Override 
+      public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Exercise)) return false;
       Exercise<?> other = (Exercise<?>) o;
@@ -922,7 +950,8 @@ public class DataExample {
       return true;
     }
     
-    @Override public int hashCode() {
+   	  @Override 
+      public int hashCode() {
       final int PRIME = 59;
       int result = 1;
       result = (result*PRIME) + (this.getName() == null ? 43 : this.getName().hashCode());
@@ -934,16 +963,16 @@ public class DataExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 ### 2.2 @Getter/@Setter
 
 如果觉得@Data太过残暴（因为@Data集合了@ToString、@EqualsAndHashCode、@Getter/@Setter、@RequiredArgsConstructor的所有特性）不够精细，可以使用@Getter/@Setter注解，此注解在属性上，可以为相应的属性自动生成Getter/Setter方法，示例如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
-```
- import lombok.AccessLevel;
+
+```java
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -960,13 +989,9 @@ public class GetterSetterExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 如果不使用Lombok：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
  public class GetterSetterExample {
 
   private int age = 10;
@@ -992,17 +1017,13 @@ public class GetterSetterExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 ### 2.3 @NonNull
 
 该注解用在属性或构造器上，Lombok会生成一个非空的声明，可用于校验参数，能帮助避免空指针。
 
 示例如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import lombok.NonNull;
 
 public class NonNullExample extends Something {
@@ -1016,13 +1037,11 @@ public class NonNullExample extends Something {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 不使用Lombok：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import lombok.NonNull;
 
 public class NonNullExample extends Something {
@@ -1039,17 +1058,13 @@ public class NonNullExample extends Something {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 ### 2.4 @Cleanup
 
 该注解能帮助我们自动调用close()方法，很大的简化了代码。
 
 示例如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import lombok.Cleanup;
 import java.io.*;
 
@@ -1068,13 +1083,11 @@ public class CleanupExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 如不使用Lombok，则需如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import java.io.*;
 
 public class CleanupExample {
@@ -1104,17 +1117,13 @@ public class CleanupExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 ### 2.5 @EqualsAndHashCode
 
 默认情况下，会使用所有非静态（non-static）和非瞬态（non-transient）属性来生成equals和hasCode，也能通过exclude注解来排除一些属性。
 
 示例如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(exclude={"id", "shape"})
@@ -1140,11 +1149,7 @@ public class EqualsAndHashCodeExample {
     }
   }
 }
-
-
 ```
-
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
 ### 2.6 @ToString
 
@@ -1154,9 +1159,9 @@ public class EqualsAndHashCodeExample {
 
 使用Lombok的示例：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
-```
+
+```java
 import lombok.ToString;
 
 @ToString(exclude="id")
@@ -1184,13 +1189,11 @@ public class ToStringExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+
 
 不使用Lombok的示例如下：
 
-[![复制代码](../media/pictures/Utils.assets/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import java.util.Arrays;
 
 public class ToStringExample {
@@ -1224,17 +1227,13 @@ public class ToStringExample {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 ### 2.7 @NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor
 
 无参构造器、部分参数构造器、全参构造器。Lombok没法实现多种参数构造器的重载。
 
 Lombok示例代码如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -1254,13 +1253,9 @@ public class ConstructorExample<T> {
 
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 不使用Lombok的示例如下：
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```java
  public class ConstructorExample<T> {
   private int x, y;
   @NonNull private T description;
@@ -1283,7 +1278,8 @@ public class ConstructorExample<T> {
   }
   
   public static class NoArgsExample {
-    @NonNull private String field;
+   	 @NonNull 
+      private String field;
     
     public NoArgsExample() {
     }
@@ -1291,8 +1287,6 @@ public class ConstructorExample<T> {
 }
 
 ```
-
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
 ## 3 Lombok工作原理分析
 
@@ -1318,7 +1312,6 @@ apt自JDK5产生，JDK7已标记为过期，不推荐使用，JDK8中已彻底�
 2）Pluggable Annotation Processing API
 
 [JSR 269](https://jcp.org/en/jsr/detail?id=269)自JDK6加入，作为apt的替代方案，它解决了apt的两个问题，javac在执行的时候会调用实现了该API的程序，这样我们就可以对编译器做一些增强，这时javac执行的过程如下：
-![这里写图片描述](../media/pictures/Utils.assets/Typora)
 
 Lombok本质上就是一个实现了“[JSR 269 API](https://www.jcp.org/en/jsr/detail?id=269)”的程序。在使用javac的过程中，它产生作用的具体流程如下：
 
@@ -1355,15 +1348,19 @@ Lombok虽然有很多优点，但Lombok更类似于一种IDE插件，项目也�
 
 虽然话糙但理确实不糙，试想一个项目有非常多类似Lombok这样的插件，个人觉得真的会极大的降低阅读源代码的舒适度。
 
-虽然非常不建议在属性的getter/setter写一些业务代码，但在多年项目的实战中，有时通过给getter/setter加一点点业务代码，能极大的简化某些业务场景的代码。所谓取舍，也许就是这时的舍弃一定的规范，取得极大的方便。
+虽然非常不建议在属性的getter/setter写一些业务代码，但在多年项目的实战中，有时通过给getter/setter加一点点业务代码，能极大的
 
-我现在非常坚信一条理念，任何编程语言或插件，都仅仅只是工具而已，即使工具再强大也在于用的人，就如同小米加步枪照样能赢飞机大炮的道理一样。结合具体业务场景和项目实际情况，无需一味追求高大上的技术，适合的才是王道。
+简化某些业务场景的代码。所谓取舍，也许就是这时的舍弃一定的规范，取得极大的方便。
+
+我现在非常坚信一条理念，任何编程语言或插件，都仅仅只是工具而已，即使工具再强大也在于用的人，就如同小米加步枪照样能赢飞机
+
+大炮的道理一样。结合具体业务场景和项目实际情况，无需一味追求高大上的技术，适合的才是王道。
 
 Lombok有它的得天独厚的优点，也有它避之不及的缺点，熟知其优缺点，在实战中灵活运用才是王道。
 
 
 
-就是bean上面加东西的!看10.14记录!
+
 
 ## @Resource注解
 
@@ -1414,8 +1411,6 @@ UserEntity entity = userService.findByCondition( UserDTO.builder()              
 
 
 
-## -----
-
 ## 使用
 
 以前的Java项目中，充斥着太多不友好的代码：POJO的getter/setter/toString；异常处理；I/O流的关闭操作等等，这些样板代码既没有技术含量，又影响着代码的美观，Lombok应运而生。
@@ -1426,17 +1421,16 @@ UserEntity entity = userService.findByCondition( UserDTO.builder()              
 
 ### 1）引入相应的maven包
 
-> ​    <dependency>
->
-> ​          <groupId>org.projectlombok</groupId>
->
-> ​          <artifactId>lombok</artifactId>
->
-> ​          <version>1.16.18</version>
->
-> ​          <scope>provided</scope>
->
-> ​    </dependency>
+```xml
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.16.18</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+
 
 Lombok的scope=provided，说明它只在编译阶段生效，不需要打入包中。事实正是如此，Lombok在编译期将带Lombok注解的Java文件正确编译为完整的Class文件。
 
@@ -1484,29 +1478,7 @@ Lombok就是一个实现了"JSR 269 API"的程序。在使用javac的过程中�
 
 #### POJO类常用注解:
 
-**@Getter/@Setter: 作用类上，生成所有成员变量的getter/setter方法；作用于成员变量上，生成该成员变量的getter/setter方法。可以设定访问权限及是否懒加载等。**
-
-> package com.kaplan.pojo;
->
-> import lombok.*;
->
-> import lombok.extern.log4j.Log4j;
->
-> @Getter
->
-> @Setter
->
-> public class TestDemo {
->
-> private String name;
->
-> ​    private int age ;    private String email;
->
-> private String address;    private String password;
->
-> ​    @Getter @Setter private boolean funny;
->
-> }
+@Getter/@Setter: 作用类上，生成所有成员变量的getter/setter方法；作用于成员变量上，生成该成员变量的getter/setter方法。可以设定访问权限及是否懒加载等。
 
 **@ToString：作用于类，覆盖默认的toString()方法，可以通过of属性限定显示某些字段，通过exclude属性排除某些字段。**
 
@@ -1518,7 +1490,7 @@ Lombok就是一个实现了"JSR 269 API"的程序。在使用javac的过程中�
 
 ![1591857589000](../media/pictures/Utils.assets/1591857589000.png)
 
-@NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor：作用于类上，用于生成构造函数。有staticName、access等属性。
+**@NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor：作用于类上，用于生成构造函数。有staticName、access等属性。**
 
 **staticName属性一旦设定，将采用静态方法的方式生成实例，access属性可以限定访问权限。**
 
@@ -1550,41 +1522,15 @@ Lombok就是一个实现了"JSR 269 API"的程序。在使用javac的过程中�
 
 ![1591857644202](../media/pictures/Utils.assets/1591857644202.png)
 
-@Synchronized：作用于方法级别，可以替换synchronize关键字或lock锁，用处不大.
+**@Synchronized：作用于方法级别，可以替换synchronize关键字或lock锁，用处不大.**
 
 
 
 # Swagger
 
-二供：http://localhost:13000/jdrx-secondary-supply/swagger-ui.html
+里面的一些注解，然后补充在这里。
 
-### 
-
-```
-http://localhost:13000/jdrx-secondary-supply/swagger-ui.html
-
-```
-
-需要注意的一点是：
-
-swagger路径里面的是这个，不是spring.application.name 
-
-```
-server.context-path=/cdsw-install
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
+还有网上有一些替代Swagger的东西，也总结一下。
 
 
 
@@ -1694,63 +1640,61 @@ public class JsonUtils {
 
 
 
-成都自来水工程台账: 建筑情况 constructQK 处理的很细节 setter 和 getter
+自来水工程台账: 建筑情况 constructQK 处理的很细节 setter 和 getter
 
 
 
 二供获取委派用户用到的解析json的：
 
 ```java
-	//从ocp系统查角色对应下面的  这是原来的从常量里面获取ip和路径
-		String path = WorkOrderConstants.OCP_HANDLE_USER_IP + WorkOrderConstants.OCP_HANDLE_USER_URL;
-		WorkOrdeHandleUserDTO dto = new WorkOrdeHandleUserDTO();
-		dto.setId(WorkOrderConstants.OCP_HANDLE_USER_ID);
+//从ocp系统查角色对应下面的  这是原来的从常量里面获取ip和路径
+String path = WorkOrderConstants.OCP_HANDLE_USER_IP + WorkOrderConstants.OCP_HANDLE_USER_URL;
+WorkOrdeHandleUserDTO dto = new WorkOrdeHandleUserDTO();
+dto.setId(WorkOrderConstants.OCP_HANDLE_USER_ID);
 
 HttpResponse result = HttpRequest.post(path)
- 				.header(Header.CONTENT_TYPE, WorkOrderConstants.RESPONSE_CONTENT_TYPE) //头信息，多个头信息多次调用此方法即可
-				.header(Header.ACCEPT, "*/*")
-				.body(JSON.toJSONString(dto))
-				.execute();
+    .header(Header.CONTENT_TYPE, WorkOrderConstants.RESPONSE_CONTENT_TYPE) //头信息，多个头信息多次调用此方法即可
+    .header(Header.ACCEPT, "*/*")
+    .body(JSON.toJSONString(dto))
+    .execute();
 
-		JSONObject handleUser = JSONUtil.parseObj(result.body());
-		JSONArray dataArray = handleUser.getJSONArray("data");
-		LOGGER.info("获取到的ocp用户列表为:" + dataArray);
+JSONObject handleUser = JSONUtil.parseObj(result.body());
+JSONArray dataArray = handleUser.getJSONArray("data");
+LOGGER.info("获取到的ocp用户列表为:" + dataArray);
 
-		List<HandleUserVo> handleUserVoList = new ArrayList<>();
-		for (int i = 0; i < dataArray.size(); i++) {
-			//从工单系统查对应角色的人 获取json串中的 realname
-			JSONObject data = dataArray.getJSONObject(i);
-			String realname = data.getStr("realname");
-			String id = data.getStr("id");
+List<HandleUserVo> handleUserVoList = new ArrayList<>();
+for (int i = 0; i < dataArray.size(); i++) {
+    //从工单系统查对应角色的人 获取json串中的 realname
+    JSONObject data = dataArray.getJSONObject(i);
+    String realname = data.getStr("realname");
+    String id = data.getStr("id");
 
-			HandleUserVo handleUserVo = new HandleUserVo();
-			handleUserVo.setName(realname);
-			handleUserVo.setId(Long.valueOf(id));
+    HandleUserVo handleUserVo = new HandleUserVo();
+    handleUserVo.setName(realname);
+    handleUserVo.setId(Long.valueOf(id));
 
-			Map<String, Object> query = new HashMap<>();
-			query.put("handleUser", realname);
-			List<WorkOrderPO> workOrderPOList = workOrderDAO.listBy(query);
+    Map<String, Object> query = new HashMap<>();
+    query.put("handleUser", realname);
+    List<WorkOrderPO> workOrderPOList = workOrderDAO.listBy(query);
 
-			if (workOrderPOList.size() > 0) {
-				handleUserVo.setStatus(EWorkOrderStates.BUSY.getType());
-			}
-			handleUserVoList.add(handleUserVo);
-		}
+    if (workOrderPOList.size() > 0) {
+        handleUserVo.setStatus(EWorkOrderStates.BUSY.getType());
+    }
+    handleUserVoList.add(handleUserVo);
+}
 
-	return handleUserVoList;
-
+return handleUserVoList;
 ```
 
 
 
 ## Fastjson 将Json转换为Object
 
-绵阳扫码支付这里（获取预支付结果）
+扫码支付这里（获取预支付结果）
 
 ```java
 String str = "{\"respCode\":\"0000000000\",\"respMsg\":\"交易成功		\",\"recordCount\":null,\"reqSeqNo\":null,\"token\":\"https://mail.scrcu.com:82/payweb/merCodeReceive?qrCode=https://qr.95516.com/00010000/01462410577035304057810240124827\",\"respTime\":\"20201030111618\",\"respSsn\":\"20103011160015186927\"}";
 
-	
 ProPayReceiveDTO proPayReceiveDTO = JSON.parseObject(str,ProPayReceiveDTO.class);
 System.out.println(proPayReceiveDTO);
 ```
@@ -1770,8 +1714,6 @@ https://github.com/jpush/jpush-api-java-client
 开发APi
 
 http://docs.jiguang.cn/jpush/server/push/rest_api_v3_push/
-
-
 
 
 
@@ -1800,7 +1742,7 @@ API文档： http://poi.apache.org/apidocs/index.html
 
 
 ```java
-//成都自来水 SpecialProjectService这个类下面 
+//自来水 SpecialProjectService这个类下面 
 
 //验收合格完成时间
 cell = row.getCell(28);
@@ -1835,8 +1777,6 @@ NUMERIC(0),
 
 ```
 
-
-
 参考：https://blog.csdn.net/xuanjiewu/article/details/73239131?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
 
 
@@ -1861,9 +1801,304 @@ https://www.jianshu.com/p/41ea7a43093c
 
 
 
+# Jmeter测压
+
+jmeter 测试系统能经受多大负载的开源jar,做性能测试的开源项目!
+
+打开软件文件bin目录，然后点击ApacheJmeter.jar就可以打开窗口。 或者点击bin里面的jmter.bat 也可以打开软件。
+
+![1592983096396](../media/pictures/Utils.assets/1592983096396.png)
 
 
 
+
+
+首先将这个软件修改成中文!
+
+![1571379480884](../media/pictures/Utils.assets/1571379480884.png)
+
+
+
+## 秒杀服务之秒杀项目构建
+
+### 秒杀项目业务场景介绍
+
+现该电影网站和各大影院合作，推出一个购买兑换码活动。用户参与流程如下
+
+![](../media/pictures/Utils.assets/f79f406066dbaee85c92d5bf6be706bf.png)
+
+注意：优惠券是限量的
+
+## 秒杀相关概念介绍
+
+### 库存
+
+参与秒杀活动商品的数量
+
+这个项目中将秒杀的库存表放在另一个单独的表里面,是因为,秒杀的时候,库存这个数据需要一直更新,而数据库中其他数据不需要动,将库存放在一个单独的表中,是为了更新库存的速度变快! 
+
+### 超卖问题
+
+卖出的商品的数量大于活动库存的数量
+
+造成超卖问题的原因？
+
+库存并发更新
+
+## 高并发相关概念介绍
+
+### 并发
+
+> 同时拥有两个或多个线程，如果程序在单核处理器上运行，多个线程将交替地换入或者换出内存，这些线程是同时「
+> 存在
+> 」的，每个线程都处于执行过程中的某个状态，如果运行在多核处理器上，此时，程序中每个线程都将分配到一个处理器核上，因此可以同时运行。也就是说，并发就是多个线程操作相同的物理机中的资源，保证其线程安全，合理的利用资源。
+
+### 高并发
+
+> 由于分布式系统的问世，高并发（High
+> Concurrency）通常是指通过设计保证系统能够同时并行处理很多请求。通俗来讲，高并发是指在同一个时间点，有很多用户同时的访问同一
+> API 接口或者 Url
+> 地址。它经常会发生在有大活跃用户量，用户高聚集的业务场景中。（百度词条）
+
+> 高并发中有如下概念：
+
+#### QPS（Query Per Second）
+
+> 每秒钟处理完请求的次数；注意这里是处理完。具体是指发出请求到服务器处理完成功返回结果。可以理解在server中有个counter，每处理一个请求加1，1秒后counter=QPS。
+
+#### TPS（Transaction Per Second）
+
+> 一般来说是针对整个系统来说的，指每秒能够处理完的事物数，针对单个接口来说一般用QPS
+
+#### 并发量
+
+> 系统能够同时处理的请求数
+
+#### 响应时间
+
+> 系统处理一次请求所需要的平均处理时间
+
+#### 计算关系：
+
+QPS = 并发量 / 平均响应时间
+
+并发量 = QPS \* 平均响应时间
+
+### 高可用
+
+高可用（HighAvailability）是系统架构设计中必须考虑的因素之一，它通常是指，通过设计减少系统不能提供服务的时间。计量单位是百分比，常用99%,99.9%,99.99%来表示。一般讲4个9，5个9或者6个9。
+
+举个例子：可用性为99%的系统，全年停机时间为3.5天；99.9%的系统；全年停机时间为8.5小时；99.99%的系统全年停机时间为53分钟；99.999%的系统全年停机时间仅仅约为5分钟。
+
+## 如何设计高并发系统
+
+### 提高并发量
+
+如何提高并发量？也就是提高系统能够同时处理的请求数量，例如
+
+### 提高物理机器性能
+
+比如：增强单机硬件性能，例如：增加CPU核数如32核，升级更好的网卡如万兆，升级更好的硬盘如SSD，扩充硬盘容量如2T，扩充系统内存如128G；
+
+### 增加能够同时处理请求的个数：
+
+比如：增加节点、配置tomcat线程池 等等
+
+### 缩短平均响应时间
+
+等于如何提高接口响应速度？
+
+缓存、异步、无锁等等
+
+## 高并发系统的三把利器：
+
+缓存、限流、降级
+
+缓存：提升系统响应速度、增大系统能够处理的容量
+
+降级：当服务出问题或者影响到核心流程的性能则需要暂时屏蔽掉，待高峰或者问题解决后再打开
+
+限流：限流的目的是通过对并发访问/请求进行限速或者一个时间窗口内的的请求进行限速来保护系统，一旦达到限制速率则可以拒绝服务
+
+## Jmeter的介绍
+
+JMeter是Apache组织开发的开源项目，设计之初是用于做性能测试的，同时它在实现对各种接口的调用方面做的比较成熟，因此，常被用做接口功能测试和性能测试。
+
+它能够很好的支持各种常见接口，如HTTP(S)、WebService、JDBC、JAVA、FTP等，并以多种形式与参数展现测试结果。
+
+1. Jmeter的使用
+   1. 安装JDK并且配置好环境变量
+   2. 安装Jmeter
+
+其实jmeter是免安装的，只需要下载解压即可。
+
+安装包直接去jmeter官网下载即可（[http://jmeter.apache.org/down...](http://jmeter.apache.org/download_jmeter.cgi)），建议选择3.0或以上版本，我目前使用的是5.1.1的版本。下载后解压到非C盘的非中文目录即可。
+
+1. 如何使用Jmter
+   1. 添加测试计划
+   2. 添加线程组
+
+![](../media/pictures/Utils.assets/a4a34ad9a19aea78fab596be3ffe2735.png)
+
+设置线程组
+
+### 构建请求
+
+![](../media/pictures/Utils.assets/c85ef0a1a1f66dd79989c7212a7472cf.png)
+
+以HTTP为例，我们需要设置以下请求参数
+
+请求名称
+
+协议
+
+服务器IP/域名
+
+端口号
+
+HTTP请求方法、路径
+
+添加请求参数
+
+勾选☑️使用Keep-alive
+
+点击高级 —\> 选择Java客户端实现
+
+如果需要设置请求头参数，则需要点击如下设置：
+
+![](../media/pictures/Utils.assets/0d9aeb7c7716cdf7c57cb875b147199a.png)
+
+### 查看结果
+
+> 添加查看结果树
+
+> 添加聚合报告
+
+![](../media/pictures/Utils.assets/219d5f0dac9538a774a4c74afe3ed55b.png)
+
+点击上方绿色执行箭头开始测试
+
+1. 秒杀接口业务介绍
+   1. 业务表设计
+   2. 业务接口
+
+> 1、查询秒杀活动接口
+
+> 2、秒杀下单接口
+
+> 生成订单 扣减库存
+
+> 如何优化？优化之后会带来什么问题？
+
+
+
+## 秒杀接口业务介绍
+
+### 业务表设计
+
+### 业务接口
+
+查询秒杀活动接口
+
+秒杀下单接口
+
+​              生成订单 扣减库存
+
+如何优化？优化之后会带来什么问题？
+
+
+
+## Linux系统上面  Load Average 
+
+网上查到相关信息:
+
+![1571383240086](../media/pictures/Utils.assets/1571383240086.png)
+
+上面的load average 是记录系统一分钟,五分钟,十五分钟的平均负载的! 后面的数字是负载
+
+一幅图秒懂LoadAverage（负载）
+
+
+
+一、什么是Load Average？
+
+系统负载（System Load）是系统CPU繁忙程度的度量，即有多少进程在等待被CPU调度（进程等待队列的长度）。
+
+平均负载（Load Average）是一段时间内系统的平均负载，这个一段时间一般取1分钟、5分钟、15分钟。
+
+
+
+二、如何查看Load？
+
+top命令，w命令，uptime等命令都可以查看系统负载：
+
+[shenjian@dev02 ~]$ uptime
+
+13:53:39 up 130 days,  2:15,  1 user,  load average: 1.58, 2.58, 5.58
+
+如上所示，dev02机器1分钟平均负载，5分钟平均负载，15分钟平均负载分别是1.58、2.58、5.58
+
+
+
+三、Load的数值是什么含义？
+
+把CPU比喻成一条（单核）马路，进程任务比喻成马路上跑着的汽车，Load则表示马路的繁忙程度：
+
+Load小于1：表示完全不堵车，汽车在马路上跑得游刃有余：
+
+[![load0.5](../media/pictures/Utils.assets/load0.5.png)](http://www.habadog.com/wp-content/uploads/2015/02/load0.5.png)[ Load<1，单核]
+
+Load等于1：马路已经没有额外的资源跑更多的汽车了：
+
+[![load1](../media/pictures/Utils.assets/load1.png)](http://www.habadog.com/wp-content/uploads/2015/02/load1.png)[Load==1，单核]
+
+Load大于1：汽车都堵着等待进入马路：
+
+[![load5](../media/pictures/Utils.assets/load5.png)](http://www.habadog.com/wp-content/uploads/2015/02/load5.png)[Load>1，单核]
+
+如果有两个CPU，则表示有两条马路，此时即使Load大于1也不代表有汽车在等待：
+
+[![load2](../media/pictures/Utils.assets/load2.png)](http://www.habadog.com/wp-content/uploads/2015/02/load2.png)[Load==2，双核，没有等待]
+
+
+
+四、什么样的Load值得警惕（单核）？
+
+Load < 0.7时：系统很闲，马路上没什么车，要考虑多部署一些服务
+
+0.7 < Load < 1时：系统状态不错，马路可以轻松应对
+
+Load == 1时：系统马上要处理不多来了，赶紧找一下原因
+
+Load > 5时：马路已经非常繁忙了，进入马路的每辆汽车都要无法很快的运行
+
+
+
+五、三个Load值要先看哪一个？
+
+结合具体情况具体分析：
+
+1）1分钟Load>5，5分钟Load<1，15分钟Load<1：短期内繁忙，中长期空闲，初步判断是一个“抖动”，或者是“拥塞前兆”
+
+2）1分钟Load>5，5分钟Load>1，15分钟Load<1：短期内繁忙，中期内紧张，很可能是一个“拥塞的开始”
+
+3）1分钟Load>5，5分钟Load>5，15分钟Load>5：短中长期都繁忙，系统“正在拥塞”
+
+4）1分钟Load<1，5分钟Load>1，15分钟Load>5：短期内空闲，中长期繁忙，不用紧张，系统“拥塞正在好转”
+
+
+
+六、Load总结
+
+[![load0.5](../media/pictures/Utils.assets/load0.5.png)](http://www.habadog.com/wp-content/uploads/2015/02/load0.5.png)[ Load<1，单核]
+
+[![load1](../media/pictures/Utils.assets/load1-1594393995126.png)](http://www.habadog.com/wp-content/uploads/2015/02/load1.png)[Load==1，单核]
+
+[![load5](../media/pictures/Utils.assets/load5.png)](http://www.habadog.com/wp-content/uploads/2015/02/load5.png)[Load>1，单核]
+
+[![load2](../media/pictures/Utils.assets/load2.png)](http://www.habadog.com/wp-content/uploads/2015/02/load2.png)[Load==2，双核]
+
+希望上面一幅图对大家理解Load Average有帮助，赶快uptime一下，看一下自己系统的负载吧。
 
 
 
@@ -1892,14 +2127,6 @@ https://www.jianshu.com/p/41ea7a43093c
 
 
 # Jenkins详细教程
-
-[![img](../media/pictures/Utils.assets/6-fd30f34c8641f6f32f5494df5d6b8f3c.jpg)](https://www.jianshu.com/u/605def32578d)
-
-[哥本哈根月光](https://www.jianshu.com/u/605def32578d)关注
-
-162018.03.05 16:57:47字数 3,360阅读 297,703
-
-​        最近花了一段时间研究jenkins这个工具。所以写下这篇文章，算是当做记录吧！
 
 ## 一、jenkins是什么？
 
