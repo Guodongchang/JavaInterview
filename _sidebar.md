@@ -14,7 +14,7 @@
   * [数据结构](./docs/DataStructure.md) 
   * [计算机网络](./docs/NetWork.md) 
 * 数据库
-  - [Mysql](./docs/Mysql.md)  
+  - [Mysql](./docs/MySql.md)  
   - [Oracle](./docs/Oracle.md) 
   - [Redis](./docs/Redis.md) 
 * 设计模式
