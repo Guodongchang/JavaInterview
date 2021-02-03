@@ -56,7 +56,7 @@
   * [数据结构](./docs/DataStructure.md)   需要完善
   * [计算机网络](./docs/NetWork.md)   需要完善
 * 数据库
-  - [Mysql](./docs/Mysql.md)  需要完善
+  - [MySql](./docs/MySql.md)  需要完善
   - [Oracle](./docs/Oracle.md) 
   - [Redis](./docs/Redis.md) 
 * 设计模式
