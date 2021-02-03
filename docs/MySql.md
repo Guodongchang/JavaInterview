@@ -1,4 +1,4 @@
-MySql
+# MySql
 
 ## 目录
 
@@ -1579,43 +1579,41 @@ alter table t_user modify name varchar(20);
 
 
 
-删除非空约束：
-
-![](../media/pictures/MySql.assets/400b9899a0f8549526636af6b5b2eaf0.png)
-
-![](../media/pictures/MySql.assets/8ed5a3d1ede1002a2d140f9dcf524e2b.png)
-
-##### 外键约束：
+##### 外键约束
 
 比如有两张表，一张学生选课表，另外一张课程表，学生选择的课程必须是课程表中出现的课程，这个时候可以用外键来约束。如果不是课程表内的课程，则无法插入。
 
-新建外键：
+```sql
+--新建外键
+--第一种方式：在创建表的时候添加外键
+create table students(
+	id int primary key auto_increment,
+    name varchar(20),
+    cid int,
+    sonstraint srtudent_course_FK foreign key (cid) references couese(id)
+)
 
-第一种方式：在创建表的时候添加外键
+create table course(
+	id int primary key auto_increment,
+    cname varchar(20)
+)
 
-![](../media/pictures/MySql.assets/6e8f8ea6b0fd846e5b718fda6a45b11c.png)
+--第二种方式：表创建完之后，再添加外键
+alter table studnets add constraint student_course_FK foreign key (cid) references couese(id);
 
-第二种方式：表创建完之后，再添加外键
+--删除外键  删除外键的时候，需要用到新建外键时取的名称。
+alter table strudent drop foreign key student_course_FK;
+```
 
-![](../media/pictures/MySql.assets/24734161e2a79a69f020d14d9a23de9e.png)
 
-添加完外键约束之后，插入数据：
 
-![](../media/pictures/MySql.assets/cba9dd1616fbd3659f133cf81c0f9302.png)
+关于外键的优劣?
 
-删除外键：
+- 其实工作中，用外键的情况很少
+- 优点：外键可以起到约束作用，可以避免很多脏数据产生
+- 缺点：使用了外键性能差一些，对数据库的开销远远大于益处。
 
-![](../media/pictures/MySql.assets/3e0c53e6ee1c341436c0656c74866690.png)
 
-删除外键的时候，需要用到新建外键时取的名称。
-
-关于外键的优劣？？？？？自己可以总结一下。
-
-为什么呢？？？外键其实在真实企业中使用场景并不是非常的多，性能方面
-
-关于外键的优劣，有两种观点，一种认为外键可以起到很好的约束作用，值得使用
-
-另外一种观点，认为外键虽然可以起到约束，但是同时它给数据库系统带来的整体开销远远大于获得的益处。
 
 ### 多表设计
 
@@ -1623,13 +1621,9 @@ alter table t_user modify name varchar(20);
 
 班级和学生。
 
-![](../media/pictures/MySql.assets/8fd8beb7df5793488236f5e9e198e2fd.png)
+一对多，应该在多的一方添加外键约束或者**添加新的字段**记录一所表示的的数据的id或者其他，这样可以极大地减少数据的冗余，也就是非必要数据重复。
 
-![](../media/pictures/MySql.assets/e7db95abe1e021d45106d4184c7a3f1e.png)
 
-一对多，应该在多的一方添加外键约束，这样可以极大地减少数据的冗余，也就是非必要数据重复。
-
-![](../media/pictures/MySql.assets/5525f652d9e62af88ed1547bc186b6a4.png)
 
 #### 多对多
 
@@ -1637,105 +1631,107 @@ alter table t_user modify name varchar(20);
 
 学生选课：学生表和课程表：一个学生可以选择多门课程，一个课程可以被很多学生选择。
 
-![](../media/pictures/MySql.assets/aecf8d9d8cc9061ba9eb128f67e476b2.png)
 
-![](../media/pictures/MySql.assets/f272d69418d25b4ffd3769f13f1a0690.png)
+
+总结：多对多需要中间表，比较常见的是系统的角色和用户之间，需要建立中间表，记录两者之间的关系。还有比如shiro，角色 用户 资源  面试老会碰到需要建立几个数据库表，当然是五张表（有两张中间表）。
+
+
 
 #### 一对一
 
-![](../media/pictures/MySql.assets/1ac2c8a05f50fea1b6a9bf240c62f820.png)
+可以将另外一张表里面的字段直接写入表内，很不常用。
 
-可以将另外一张表里面的字段直接写入表内。
 
-很不常用
 
 ### 多表查询
 
 很多情形下，所需要的数据在一张表内无法全部得到，这个时候就需要用到多表联立查询的方式来查询。为什么需要多表查询？有时候一张表的数据无法满足我们的需求，这个时候就需要从多张表里面找出相应的数据，然后展示。
 
+
+
 #### 交叉连接
 
 返回所有结果的笛卡尔积。交叉连接基本没有使用的场景，但是交叉连接的结果作为其他连接查询的基础。
 
-Select \* from table1 cross join table2;
+```sql
+Select * from table1 cross join table2;
+```
+
+
+
+![image-20210203151531796](../media/pictures/MySql.assets/image-20210203151531796.png)
+
+注意：下面内连接和外连接都是对上图中 1  2  3 部分进行操作，部分3 也叫幽灵订单。
+
+
 
 #### 内连接
 
-返回连接表中符合连接条件及查询条件的数据行。（订单表而言，就是显示订单的详细信息）
-
-![](../media/pictures/MySql.assets/1c154960d3173472d0f466d21469d3ba.png)
-
-![](../media/pictures/MySql.assets/1c65037d9331aef1998853ec416bbeb3.png)
-
-当在orders表内新增一条幽灵订单，再次内连接查询，结果仍然是7条（满足条件的结果）
-
-两个结果集的交集。
-
-![](../media/pictures/MySql.assets/298ec6c98ad4455025e8e26e1bc01d50.png)
-
 ```sql
-select * from customer c inner join orders o on c.id = o.customer.id
+--内连接就是查询上图的 2
+select 
+	* 
+from costomer c 
+inner join orders o c.id = o.customer_id;
+
+--隐式内连接
+select * from customer c,orders o where c.id = o.customer_id;
 ```
 
-隐式内连接：
 
-![](../media/pictures/MySql.assets/e0b5149de790fd88517abc9dab105b9b.png)
 
 #### 外连接
 
-##### 左外连接
+```sql
+--左外连接 就是查询上图的 1 + 2
+select * from customer c left join orders o on c.id=o.customer_id
 
-![](../media/pictures/MySql.assets/6d8833cd6ad91cefa2b512278c8f9ddc.png)
+--左连接的意义
+--可以查询出当前系统内每个人的订单情况（大数据杀熟）（左表的数据会被全部展示出来）
 
-![](../media/pictures/MySql.assets/060b2ff0ce404252b61898770c688552.png)
+--右外连接 就是查询上图的 2 + 3
+select * from customer c right join orders o on c.id = o.customer_id;
+--不仅返回符合查询条件的数据，还返回右表中不符合条件的其他数据（右表中的数据会全部展示出来。）
+```
 
-有什么意义？？？？
 
-可以查询出当前系统内每个人的订单情况（大数据杀熟）（左表的数据会被全部展示出来）
-
-##### 右外连接
-
-![](../media/pictures/MySql.assets/8a46ba6b4ffdf58e30d6be6a049d346d.png)
-
-不仅返回符合查询条件的数据，还返回右表中不符合条件的其他数据（右表中的数据会全部展示出来。）
-
-![](../media/pictures/MySql.assets/d5960ee6470c633aabf912c414187692.png)
 
 ##### 连接查询扩展
 
-![](../media/pictures/MySql.assets/f87953d91e38a274263ff3be7d60b44b.png)
+```sql
+--只查询上图的 部分1 
+select 
+	* 
+from customer c 
+lift join orders o on c.id = o.customer_id
+where o.customer_id is null;
 
-只查询颜色标注的区域：
 
-![](../media/pictures/MySql.assets/d2f5bf352c127d1b665b57f334f34d05.png)
+--只查询上图中 部分3 也就是幽灵订单
+select
+	* 
+from customer c
+right join orders o on c.id = o.customer_id where c.id is null;
 
-只查询幽灵订单数据：
 
-![](../media/pictures/MySql.assets/cdf6720778610743e96d5ad4c35831d0.png)
+--查询 上图全部部分 1 + 2 + 3
+Select 
+	* 
+from customer c 
+left join orders o on c.id = o.customer_id union
+```
 
-统计全部颜色区域：
 
-![](../media/pictures/MySql.assets/b0ed5dcb66f1a887ce26e21af15e6ffe.png)
-
-Select \* from customer c left join orders o on c.id = o.customer_id union
-
-Select \* from customer c right join orders o on c.id = o.customer_id
 
 #### 子查询
 
-![](../media/pictures/MySql.assets/4cd920844a13eb62b990f12b16ae3784.png)
+```sql
+select * from orders whree customer_id = (select id from customer where name = '阳光')
 
-### 数据库备份和恢复
 
-备份：
+```
 
-![](../media/pictures/MySql.assets/8776723a90496c48183efbe807e35357.png)
 
-末尾一定不要加分号
-
-恢复：
-
-Source sql路径 末尾也不需要加分号
 
 ### 数据库三大范式
 
@@ -1743,9 +1739,9 @@ Source sql路径 末尾也不需要加分号
 
 每列应当保证原子性。即不可以再进行分割。
 
-![](../media/pictures/MySql.assets/591981b41cc99c27d89f8307316b1f59.png)
+比如收货地址，如果需要经常统计到省份或者城市信息，则该列的设计就不符合第一范式的要求，仍然可以进一步拆分为省份，城市。
 
-比如收货地址这列，如果需要经常统计到省份或者城市信息，则该列的设计就不符合第一范式的要求，仍然可以进一步拆分为省份，城市。。。。
+
 
 #### 第二范式
 
@@ -1757,13 +1753,17 @@ Source sql路径 末尾也不需要加分号
 
 如果数据存在部分依赖的情形，需要将字段进行拆分，拆成多个表。
 
+
+
 需要重新拆分表：
 
 学生表：学号、姓名
 
 课程表：课程号
 
-选课表：课程号、学号、学分
+选课表：课程号、学号、学分。
+
+
 
 #### 第三范式
 
@@ -1775,149 +1775,15 @@ Source sql路径 末尾也不需要加分号
 
 学院表：学院名称、学院电话、学院号
 
-每一张表在设计的时候，都应该遵循着，只关注最小的一块功能，如统计学生信息，就仅停留在学生信息中，不要过多去延伸。分工而治的思想
+每一张表在设计的时候，都应该遵循着，只关注最小的一块功能，如统计学生信息，就仅停留在学生信息中，不要过多去延伸。分工而治的思想。
+
+
 
 # 二:JDBC
 
-## 数据库访问过程
+这一部分看原来的笔记，这里暂时没写。
 
-客户端与Mysql服务器之间建立连接
 
-客户端向Mysql服务器发送数据库请求
-
-Mysql服务器处理客户端请求，并返回结果给客户端
-
-客户端接受Mysql服务器的响应，并按照自己的业务逻辑做响应处理。
-
-释放相关资源。
-
-## JDBC是什么意思？
-
-Java DataBase Connecitivity，java数据库连接。Java程序访问数据库的方法。
-
-Sun公司制定了一套java语言访问数据库的规范。（接口）不能进行编程
-
-相应的实现类由谁来完成呢？？？各大数据库生产厂商来实现。
-
-![](../media/pictures/MySql.assets/f6d58253d9b6b79b368cf810b8de42b4.png)
-
-## 编写第一个JDBC程序
-
-### 导包
-
-![](../media/pictures/MySql.assets/7a12eebc815295fe1414d78addb137d6.png)
-
-![](../media/pictures/MySql.assets/6048c029c9b5eb809ca6095b08abf1ea.png)
-
-![](../media/pictures/MySql.assets/f6ce8b71a4a4d81e918b85c25e5627cc.png)
-
-如果选择的jar包level是project级别，则在其他的module中，不需要再次重复执行该操作，直接在open
-module setting中，选择dependencies中，选择project的依赖包。
-
-![](../media/pictures/MySql.assets/c6184d0b80bc157982e41348c21eb5d1.png)
-
-### 针对第一个JDBC程序的优化
-
-DriverManager.*registerDriver*(**new** Driver());
-
-通过查看Driver源码可以看到，这段代码其实执行了两次驱动注册，所以可以进一步的进行优化：
-
-Class.*forName*(**"com.mysql.jdbc.Driver"**);
-
-Connection connection =
-DriverManager.*getConnection*(**"jdbc:mysql://localhost:3306/mydb4?characterEncoding=utf8"**,  
-**"root"**, **"123456"**);
-
-这段代码存在什么问题？
-
-存在硬编码，如果今后数据库的用户名或者密码发生变化，以及从mysql数据库迁移到oracle或者其他数据库，需要手动去代码里面再去修改这部分代码，维护起来非常不便。
-
-解决方案就是利用配置文件来配置该信息。
-
-资源释放，写在finally代码块中
-
-![](../media/pictures/MySql.assets/0961a3d3c2eaafcdf676e04f83c498ee.png)
-
-## JDBC程序中重要的对象
-
-### DriverManager
-
-### Connection
-
-createStatement()：创建向数据库发送sql的statement对象。
-
-prepareStatement(sql) ：创建向数据库发送预编译sql的PrepareSatement对象。
-
-### Statement
-
-executeQuery(String sql) ：用于向数据发送查询语句。
-
-executeUpdate(String sql)：用于向数据库发送insert、update或delete语句
-
-execute(String sql)：用于向数据库发送任意sql语句
-
-### ResultSet
-
-对sql查询结果的封装。内部有一个游标，初始时，指向第一行数据之前，在查询数据之前必须先调用一下next方法。
-
-提供get方法可以用来获取相应的数据。
-
-![](../media/pictures/MySql.assets/40b75212cabbad5b0be7a79f26893ac4.png)
-
-我们所需要做的事情就是根据mysql数据类型和java数据类型之间转换的一个方法，来调用相应的get方法，将mysql里面的数据转换为java的数据。
-
-![](../media/pictures/MySql.assets/c62619f686bf21cbf70e6562dfa597f3.png)
-
-## CRUD
-
-### JDBC程序进一步优化
-
-可以做一个工具类，将一些重复性代码放入工具类中，直接调用
-
-![](../media/pictures/MySql.assets/42e5b55b1cac013727a1777f86ed7ec1.png)
-
-![](../media/pictures/MySql.assets/610d419196364d61dfff8b6fb3c598b1.png)
-
-### CRUD
-
-其中需要注意的一点就是查询使用一个单独的API：executeQuery
-，增删改使用另外一个API，executeUpdate。
-
-## 数据库注入问题
-
-### 模拟登录
-
-![](../media/pictures/MySql.assets/ce3246a7000985ed6d5e71972f073a2d.png)
-
-#### 数据库注入问题
-
-![](../media/pictures/MySql.assets/623a6209b25658c972fd91f7b25c4938.png)
-
-如何避免？？无法阻止用户输入不合法的数据，唯一的措施就是后端的处理上做改变。Sql语句的执行首先在数据库内被编译，之后再次执行，现在，我们能否让用户输入的数据无论包含什么样的sql语句关键字，最终数据库都不会把它当作关键字来处理，而仅仅当作普通的文本内容。
-
-prepareStatement采用一种预先编译好的机制。用户输入的任何内容仅仅会当做普通文本，而不会对里面可能包含的关键字来进行解析。
-
-![](../media/pictures/MySql.assets/ff39367c185ccffb462ae1663fa45048.png)
-
-## 批处理
-
-没有批处理，我们如何批量新增数据
-
-两种方式，一种statement批处理：
-
-![](../media/pictures/MySql.assets/643b6ddbc45aa20f2810e95a721cfeef.png)
-
-较为灵活，可以执行多条不同类型的sql语句。
-
-第二种方式。prepareStatement批处理：
-
-![](../media/pictures/MySql.assets/2119709da8157c584279583a7b3fdc2b.png)
-
-仅能执行类型相同而参数不同的sql语句。
-
-两种方式同时再一个表里面新增数据，哪种方式比较快？？？
-
-Prepare较快一些，因为采用预编译，多条sql语句只用编译一次。
 
 # 三:Transaction 事务
 
@@ -1927,31 +1793,31 @@ Prepare较快一些，因为采用预编译，多条sql语句只用编译一次�
 
 ## 事务的操作
 
-## Mysql默认情况下是自动提交事务的。<br>
+Mysql默认情况下是自动提交事务的。
 
-![](../media/pictures/MySql.assets/68930ea056e9e95c63dd7cd96c6b56c1.png)
 
-JDBC操作事务
-
-![](../media/pictures/MySql.assets/7da0a9bef1067c1aa0e37a6be03eb9ce.png)
-
-命令行操作事务
-
-### 在数据库内操作事务
-
-![](../media/pictures/MySql.assets/59602fb3c57f35545b9ebc9e847a4a58.png)
 
 Mysql数据库在默认情况下是自动提交事务的，这点需要与oracle数据库做一个区分。Oracle数据库执行完之后，需要手动执行commit操作。
 
 开启事务的方式：
 
-![](../media/pictures/MySql.assets/f7f9d42835e4a0abe955e0cd782520b7.png)
+```sql
+--设置事务不自动提交
+start transaction;
+
+--对数据update修改省略 
+
+--回滚，撤销当前对数据库的操作
+rollback; 
+```
+
+
 
 ### 事务的四个特性
 
 #### ACID：原子性，一致性，隔离性，持久性。
 
-![事务的特性](../media/pictures/MySql.assets/1637b08b98619455)
+
 
 1.**原子性**： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；
 
@@ -1991,198 +1857,33 @@ Repeatable read：可避免脏读，不可重复读发生
 
 Serializable：可避免所有问题发生（串行化，一个一个走）
 
+
+
 数据库操作事务隔离级别：
 
-![](../media/pictures/MySql.assets/c0a99661b7775f8c1f54088ce16774ca.png)
+```sql
+--查看当前数据库的隔离级别
+select @@transaction_isolation;
 
-![](../media/pictures/MySql.assets/4f2126fe28ca8fef863913cbdee0ccef.png)
+--Mysql 默认事务隔离级别
+REPEATABLE-READ
 
-![](../media/pictures/MySql.assets/59b41b5ffc04cc2857a10238a4fc791b.png)
+--更改全局数据库隔离级别
+set global transaction isolation level read uncommitted;
+```
 
-Read uncommitted无法避免脏读发生。
 
-![](../media/pictures/MySql.assets/f8ca5cc05903c1c70babb31308a180de.png)
 
-Read committed可以避免脏读的发生，但是无法避免不可重复读的发生。
+注意：
 
-![](../media/pictures/MySql.assets/a40bb4dac724aed889c54d09da261fe6.png)
+- mysql的Repeatable
+- read可以避免虚读的发生。与sql标准委员会制定的标准略有不同。
 
-Repeatable read可以避免不可重复读的发生
 
-![](../media/pictures/MySql.assets/0f7f417689e2483c0772bb6519fc42ab.png)
-
-![](../media/pictures/MySql.assets/4ef9d011dc22fc837aa4e7da45d171fc.png)
-
-需要特别注意的是mysql的repeatable
-read可以避免虚读的发生。与sql标准委员会制定的标准略有不同。
-
-### 事务的梳理
-
-一组操作，要么全部成功，要么全部不成功。转账，转账双方必须都成功，不能一方成功，一方失败。
-
-之前直接执行一条sql语句，有没有事务？有，事务是自动提交。
-
-多条sql语句如果想让它们同时成功或者失败，必须将这些sql语句放在一个事务内。
-
-命令行下：start
-transaction开启事务，并设置事务不自动提交，rollback可以回滚到开启事务时的状态，commit将更改保存。
-
-事务的四个特性（ACID）：A：原子性（它是不可分割的最小的一个单元）C：一致性（AB双方转账，开始时各1000元，两人之间无论如何转账，最终还是加起来2000元）I：隔离性（多个事务并发访问数据库时，每个事务之间彼此不会受到其他事务影响）D：持久性（事务一旦提交，它的影响将是永久的，不可撤销）
-
-隔离性：如果做得不够好，会有以下三种问题产生
-
-脏读：一个事务读取到了另外一个事务未提交的数据。
-
-不可重复读：一个事务（当前没有提交）读取到了另外一个事务提交的数据。
-
-虚读：一个事务读取到了另外一个事务新增的数据。
-
-数据库也提提供了相应的措施来避免这些问题：
-
-Read uncommitted：最低级别，以上问题均无法避免
-
-Read committed：可以避免脏读的产生
-
-Repeatable read：可以避免脏读，不可重复读（Mysql该隔离级别可以避免以上三种问题）
-
-Serializable：无法并发访问数据库
-
-### JDBC操作事务
-
-Coneection.setAutoCommit(false)
-
-Connection.commit()
-
-Connection.rollback()
-
-![](../media/pictures/MySql.assets/41e006640f9661e884303f3cf4dba799.png)
-
-设置事务的回滚点：
-
-（课外练习）
-
-比如公司老板给多名员工同时发工资，发到一半时，出现了问题，这个时候，我们可以回滚到出错的上一个人位置，而不必直接rollback到最开始的时候。转账的记录要写到一个记录表里。
-员工表 转账记录表 账户金额表
-
-首先老板选择需要发放工资的员工人员，接下来，他直接操作，最终程序自动完成转账功能。每个员工的薪水是不同的，具体的薪水存放在薪水表中。从新水表获取到需要发放工资的员工对应的薪水，之后，进入转账环节，转账成功同时要写入相应的转账记录。
-
-员工表（包含员工当前账户金额） 薪水表 转账记录表
-
-首先建表：
-
-![](../media/pictures/MySql.assets/bef7e725d672fcf551827205220795d5.png)
-
-之后，新建相应的java bean。
-
-![](../media/pictures/MySql.assets/5fc3b70a3e6e483598b08645a0ec5b12.png)
-
-业务：
-
-![](../media/pictures/MySql.assets/7eb80302c1d5d7afdaae4d327b746166.png)
-
-首先获取人员的名单，接着老板选择需要发放工资的员工id，进行转账
-
-转账成功，同时写入转账记录表。
 
 # 四:DBUtils
 
-## DbUtils提供的 close方法等
 
-简单了解一下即可
-
-## QueryRunner
-
-构造函数有带datasource和无参两种。
-
-所有的API也都有带Connection参数和无Connection参数两种。
-
-如果使用的是无Connection参数的API，则必须提供一个datasource，
-
-从QueryRunner的初始化中获得。
-
-![](../media/pictures/MySql.assets/c2823bbc4fc3da82fa9a4dd45c9d93a5.png)
-
-Method：
-
-Batch：
-
-![](../media/pictures/MySql.assets/2ef2c848a665af5ce0bb673bf80838be.png)
-
-![](../media/pictures/MySql.assets/a81eeb621c46c2f70b569e51fd4a371d.png)
-
-Query：
-
-![](../media/pictures/MySql.assets/17a9bfd301a76b7c118c5399a857bc8b.png)
-
-![](../media/pictures/MySql.assets/ffb7fb413e344b61152e541d8ad351df.png)
-
-![](../media/pictures/MySql.assets/8d1d8364616bbebbd6ee7e64e0b6ee0e.png)
-
-![](../media/pictures/MySql.assets/481eba2f6e6b2f96184e83300351254c.png)
-
-将结果集封装到一个Bean中或者一个Bean的集合中（BeanHandler BeanListHandler）。
-
-![](../media/pictures/MySql.assets/6f597663a99fb4d3042f6aa23847abdc.png)
-
-![](../media/pictures/MySql.assets/255c0d2720523d25e0811613c5c82686.png)
-
-ArrayHandler
-
-![](../media/pictures/MySql.assets/d2bfc62ebdf099572aacb85c8fd71f2d.png)
-
-![](../media/pictures/MySql.assets/64a44943701d4340e779229615f769cd.png)
-
-![](../media/pictures/MySql.assets/8dafbec9c992f448138266d7a3767215.png)
-
-ColumnListHandler
-
-![](../media/pictures/MySql.assets/b60fdf5a99684bb5fb9f106cec807f06.png)
-
-![](../media/pictures/MySql.assets/3dd58894e49334ec9e669b4b070d2d07.png)
-
-统计个数？？？？
-
-ScarlarHandler
-
-![](../media/pictures/MySql.assets/9bc23bd9d9fc3aaa1ea737489236c523.png)
-
-![](../media/pictures/MySql.assets/b4c6263eb9dcbf1b5d19f274fb191bb6.png)
-
-KeyedHandler：
-
-![](../media/pictures/MySql.assets/67993d4c8fcae1e17f1d46792b401f09.png)
-
-![](../media/pictures/MySql.assets/5af0c7c2f02488b1d04d15fc39a405bc.png)
-
-Update：
-
-![](../media/pictures/MySql.assets/a58ac891443547740a216bce3858e5b1.png)
-
-三个对象关了吗？？？
-
-![](../media/pictures/MySql.assets/39fbc2e170baaa1ca0cb65fd4d5f7c9b.png)
-
-![](../media/pictures/MySql.assets/248e59c7653efc27e793e24f90b74e7e.png)
-
-![](../media/pictures/MySql.assets/6a4d4d17aa9d1b3ddab252cabefa1627.png)
-
-Query：
-
-![](../media/pictures/MySql.assets/f5f095eb22d4858de98f480ca66b7fb7.png)
-
-![](../media/pictures/MySql.assets/76c71d3e3e74314f6c63553d42e04a60.png)
-
-![](../media/pictures/MySql.assets/fe8fe1e60182eb7871ae30db1a91c477.png)
-
-可以得出什么规律：
-
-无论query还是update，凡是主动提供connection对象，dbutils不会将connection对象close
-
-在使用过程中，建议大家使用QueryRunner带datasource的构造函数来实例化。
-
-![](../media/pictures/MySql.assets/a4694b55084e50955a15f5978c8a3204.png)
-
-![](../media/pictures/MySql.assets/2dc3e4e8e4e2a7af9cb3294d03724bd8.png)
 
 # 五:ConnectionPool 数据库连接池 
 
@@ -2192,37 +1893,11 @@ Query：
 
 解决方案，就是新建一个数据库连接池，预先在连接池里面存放一些数据库连接，当用户访问的时候，直接去连接池中去拿一个连接，而不是新创建一个。同时使用完之后，也不是直接关闭销毁，而是放回连接池。
 
-数据库连接池和我们之前学的JDBC的操作流程有没有互相违背的地方？？？
+数据库连接池和我们之前学的JDBC的操作流程有没有互相违背的地方？
 
 JDBC中一致强调要及释放资源，关闭connection对象。连接池又说要用一个池子来保存连接，避免新建一个连接。
 
-## 自己实现一个数据库连接池
 
-![](../media/pictures/MySql.assets/0cf4e6b56baaa9fc853eca4611f49db1.png)
-
-ArrayList和LinkedList各自的优缺点。
-
-第一个数据库连接池存在的问题：没有符合规范。每家的数据库连接池可能API名称都不同，同时也许有的可以直接通过静态方法调用，有的不能够直接调用，这个时候还是需要去查阅相应的开发文档，使用起来不是很方便，如果有一个规范来约束每个API名称应该是什么，这个时候，在使用各个开源数据库连接池产品时，可以直接调用接口的方法即可。
-
-Sun公司定义了一个DataSource接口，用以规范数据库连接池相关的API。
-
-解决办法就是实现DataSource接口
-
-![](../media/pictures/MySql.assets/d4c060960a3c8c4aecc5bf1702f5778f.png)
-
-实现了DataSource接口之后，发现接口中没有定义returnConnection的API，同时还有一点，我们自己实现的DataSoure肯定希望别人能够使用，作为一个第三方jar包。无法阻止其他人主动去调用connection.close方法。再次放入连接池，该连接池就没有任何意义了。
-
-当调用connection.close方法时，不是关闭连接，而是将连接返回到连接池中。
-
-重写close方法。？？？？？
-
-但是我们并不会去写connection的实现方法，唯一的途径就是传入一个会写的connection对象进来帮我们做事情。
-
-![](../media/pictures/MySql.assets/e2646f1a00704d5c524a964031c22a2b.png)
-
-![](../media/pictures/MySql.assets/ee8e5e722174a9acda50a588a95a8fcc.png)
-
-![](../media/pictures/MySql.assets/624e4d2503b1dc869f3c831aa8e3a6f8.png)
 
 ## 自己实现的数据库连接池存在的问题
 
@@ -2234,43 +1909,25 @@ Sun公司定义了一个DataSource接口，用以规范数据库连接池相关�
 
 ## 第三方开源的数据库连接池
 
+> 后续需要将这一部分代码放进来。
+
 ### DBCP
-
-使用方式一：
-
-![](../media/pictures/MySql.assets/1d236bf3091719ea25a1a2758e0dfde7.png)
-
-![](../media/pictures/MySql.assets/df0c31141ce16ffc51b8d88941ef3cf5.png)
-
-学完数据库连接池之后，这部分代码通过DriverManager获取连接就不再需要我们去处理了，我们直接通过获取第三方提供的DataSource，然后直接getConnection即可。
-
-这部分代码由数据库连接池来实现了，我们不需要关注这部分代码了。（他们对JDBC代码做了一层封装）
-
-方式二：
-
-![](../media/pictures/MySql.assets/dfd878bd7561e4a0c772de92ff7b443d.png)
 
 数据库连接池做了什么事情？简化了从之前注册驱动到获取连接这部分代码，使得代码更加健壮，能够适用真实的并发环境。
 
 ### C3P0
 
-![](../media/pictures/MySql.assets/1ffa660f2bb1618d3536b6cf10ce6286.png)
-
 它能够读取到配置文件，如何读取到的？？？？
 
 配置文件必须放到src目录下，且配置文件的名称必须为c3p0-config.xml
 
-![](../media/pictures/MySql.assets/bd8bce2b196981f79ecf51882e4a389c.png)
-
-![](../media/pictures/MySql.assets/ea5f0616a6b74c367bcb410a8e0f5fe6.png)
-
 ### Druid
 
-![](../media/pictures/MySql.assets/40fd46aaef34d3ca818e82068a415121.png)
-
-![](../media/pictures/MySql.assets/763841d317fe3f351fbae41f0b6659c3.png)
 
 
+> 索引这一部分可以结合guide哥的笔记看，他那个写的很全。
+>
+> https://snailclimb.gitee.io/javaguide/#/docs/database/MySQL
 
 # 六.数据库索引
 
@@ -2665,56 +2322,17 @@ CREATE UNIQUE NONCLUSTERED INDEX [Index_UserName] ON [dbo].[User] (    [UserName
 
 
 
-# 七.试题
+> Sql优化 这一部分没学完，后续需要重新整理一下这里笔记，现在很乱
+>
+> https://www.bilibili.com/video/av29072634/?p=5
+>
+> 这一部分，后续需要看看敖丙，3y，guide哥的文章，完善一下这一部分。
 
-## 1.SQL中函数str()
+# 七.数据库SQL优化 
 
-str()函数简介
+自己找的 面试题里面也有优化
 
-str()函数用于将数值型数据转换为字符串。
-
- 
-
-str()函数语法
-
-select str(数字类型的表达式[,表达式总长度][,小数点后面的位数])
-
-表达式总长度和小数点后面的位数为可选择参数。
-
- 
-
-str()函数实例
-
-要求：将244533.3344转换为长度为11位，小数点后有3位的字符串
-
-语句如下：select str(244533.3344,11,3)
-
-
-
-要求：将上表的学校、年龄合并为一列“学生信息”输出，年龄后加“岁”
-
-个人认为这样的语句常见：
-
-select 姓名,(学校+(str(年龄)+'岁'))as 学生信息 from Table_2  
-
-## 2.创建语句
-
-常用的创建数据库对象有：
-
-- 创建数据库： CREATE DATABASE, CREATE SCHEMA
-- 创建表：        CREATE TABLE
-- 创建视图：     CREATE VIEW
-- 创建索引：      CREATE INDEX
-
-拓展：SQL语言主要包括四类语句：数据定义语言DDL, 数据操控语言DML, 数据控制语言DCL, 事务控制语言TCL
-
-
-
-# 八.数据库SQL优化 
-
-自己种的 面试题里面也有优化
-
-这个视频是在bilibili上面找的https://www.bilibili.com/video/av29072634/?p=5!讲的还行!笔记在github上面,星里面!下载下来的笔记在总结里面!
+这个视频是在bilibili上面找的https://www.bilibili.com/video/av29072634/?p=5! 讲的还行!笔记在github上面,星里面!下载下来的笔记在总结里面!
 
 ## (1).MySQL版本：
 
@@ -7071,9 +6689,60 @@ EXISTS (
 
 ## in 和 existis 区别?
 
+
+
 参考: https://www.cnblogs.com/netserver/archive/2008/12/25/1362615.html
 
  https://www.cnblogs.com/xuanhai/p/5810918.html 
+
+
+
+
+
+## SQL中函数str()
+
+str()函数简介
+
+str()函数用于将数值型数据转换为字符串。
+
+ 
+
+str()函数语法
+
+select str(数字类型的表达式[,表达式总长度][,小数点后面的位数])
+
+表达式总长度和小数点后面的位数为可选择参数。
+
+ 
+
+str()函数实例
+
+要求：将244533.3344转换为长度为11位，小数点后有3位的字符串
+
+语句如下：select str(244533.3344,11,3)
+
+
+
+要求：将上表的学校、年龄合并为一列“学生信息”输出，年龄后加“岁”
+
+个人认为这样的语句常见：
+
+select 姓名,(学校+(str(年龄)+'岁'))as 学生信息 from Table_2  
+
+## 创建语句
+
+常用的创建数据库对象有：
+
+- 创建数据库： CREATE DATABASE, CREATE SCHEMA
+- 创建表：        CREATE TABLE
+- 创建视图：     CREATE VIEW
+- 创建索引：      CREATE INDEX
+
+拓展：SQL语言主要包括四类语句：数据定义语言DDL, 数据操控语言DML, 数据控制语言DCL, 事务控制语言TCL
+
+
+
+
 
 
 
